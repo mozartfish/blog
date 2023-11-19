@@ -1,5 +1,5 @@
 ---
-title: "Pranav Rajan Blog"
+title: "Blog"
 listing:
   contents: posts
   sort: "date desc"
