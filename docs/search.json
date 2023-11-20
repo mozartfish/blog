@@ -7,24 +7,45 @@
     "text": "Hi, my name is Pranav. The purpose of this blog is to document my projects and thoughts."
   },
   {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code."
-  },
-  {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is my first blog post. Welcome!\nI decided to start a blog inspired by Jeremy Howard’s Lecture 0 from the FastAI Course. Jeremy and FastAI used to maintain a blogging and publication tool called FastPages but transitioned to a new publication system called Quarto.\nThis blog is written in Quarto. Why Quarto? In the past I had attempted to used Medium and Substack but never fully spent the time to learn the tools to write a blog post. I decided to learn and publish with Quarto because of its capabilities to produce high quality scientific and technical documents with the ability to embed code and visualizations for review. Another reason why I like Quarto is how easy it is to write markdown and publish a website.\nGoing forward I hope to use Quarto to write about my programming projects, thoughts, and improve my writing."
+    "text": "This is my first blog post. Welcome!\nI decided to start a blog inspired by Jeremy Howard’s Lecture 0 from the FastAI Course. Jeremy and FastAI used to maintain a blogging and publication tool called FastPages but transitioned to a new publication system called Quarto.\nThis blog is written in Quarto. Why Quarto? In the past I had attempted to used Medium and Substack but never fully spent the time to learn the tools to write a blog post. I decided to learn and publish with Quarto because of its capabilities to produce high quality scientific and technical documents with the ability to embed code and visualizations for review. Another reason why I like Quarto is how easy it is to write markdown and publish a blog.\nGoing forward I hope to use Quarto to write about my programming projects, thoughts,and improve my writing."
+  },
+  {
+    "objectID": "posts/fastai-lecture0/index.html",
+    "href": "posts/fastai-lecture0/index.html",
+    "title": "FastAI Lecture 0: How to FastAI",
+    "section": "",
+    "text": "I’ve recently started FastAI Practical Deep Learning for Coders to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with Lecture 0. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. Lecture 0 isn’t officially presented in the course until Lecture 3 but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.\nLecture 0 doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the Lecture 0 project. Lecture 0 was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to Discord , Mastodon, and Bluesky. I’d recommend checking out the FastAI Forums and FastAI Discord since there’s an active community and study groups specifically for this course."
+  },
+  {
+    "objectID": "posts/fastai-lecture0/index.html#jeremy-howards-advice",
+    "href": "posts/fastai-lecture0/index.html#jeremy-howards-advice",
+    "title": "FastAI Lecture 0: How to FastAI",
+    "section": "Jeremy Howard’s Advice",
+    "text": "Jeremy Howard’s Advice\n\nCommit to finish the course\nTry to finish one really good project to show off what you’ve learned in the course\nShare and blog about your work"
+  },
+  {
+    "objectID": "posts/fastai-lecture0/index.html#how-to-watch-a-fastai-lesson",
+    "href": "posts/fastai-lecture0/index.html#how-to-watch-a-fastai-lesson",
+    "title": "FastAI Lecture 0: How to FastAI",
+    "section": "How to Watch A FastAI Lesson",
+    "text": "How to Watch A FastAI Lesson\nThis advice was presented by Jeremy in Lecture 0\n\nWatch FastAI Lecture\nRun notebooks and code presented in the lecture and experiment with code\nReproduce notebook from a clean notebook (Jeremy provides clean notebooks on github)\nRepeat with a different dataset (could be personal project)"
+  },
+  {
+    "objectID": "posts/fastai-lecture0/index.html#resources",
+    "href": "posts/fastai-lecture0/index.html#resources",
+    "title": "FastAI Lecture 0: How to FastAI",
+    "section": "Resources",
+    "text": "Resources\n\nFastAI Lecture 0: How to FastAI\nChristine Mcleavey’s Blog"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "Welcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\nNo matching items"
+    "text": "FastAI Lecture 0: How to FastAI\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\nNo matching items"
   }
 ]
