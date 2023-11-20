@@ -33,3 +33,5 @@ This advice was presented by Jeremy in `Lecture 0`
 1.  [FastAI Lecture 0: How to FastAI](https://www.youtube.com/watch?v=gGxe2mN3kAg)
 
 2.  [Christine Mcleavey's Blog](https://christinemcleavey.com/learning-about-deep-learning/)
+
+3.  [Quarto](https://quarto.org/)
