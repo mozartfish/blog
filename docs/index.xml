@@ -12,6 +12,28 @@
 <generator>quarto-1.3.450</generator>
 <lastBuildDate>Sun, 19 Nov 2023 08:00:00 GMT</lastBuildDate>
 <item>
+  <title>Welcome To My Blog</title>
+  <dc:creator>Pranav Rajan</dc:creator>
+  <link>https://mozartfish.github.io/blog/posts/welcome/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>This is my first blog post. Welcome!</p>
+<p>I decided to start a blog inspired by Jeremy Howard’s Lecture 0 from the FastAI Course. Jeremy and FastAI used to maintain a blogging and publication tool called FastPages but transitioned to a new publication system called Quarto.</p>
+<p>This blog is written in Quarto. Why Quarto? In the past I had attempted to used Medium and Substack but never fully spent the time to learn the tools to write a blog post. I decided to learn and publish with Quarto because of its capabilities to produce high quality scientific and technical documents with the ability to embed code and visualizations for review. Another reason why I like Quarto is how easy it is to write markdown and publish a website.</p>
+<p>Going forward I hope to use Quarto to write about my programming projects, thoughts, and improve my writing.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://mozartfish.github.io/blog/posts/welcome/index.html</guid>
+  <pubDate>Sun, 19 Nov 2023 08:00:00 GMT</pubDate>
+  <media:content url="https://mozartfish.github.io/blog/posts/welcome/thumbnail.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
   <title>Post With Code</title>
   <dc:creator>Harlow Malloc</dc:creator>
   <link>https://mozartfish.github.io/blog/posts/post-with-code/index.html</link>
@@ -31,26 +53,6 @@
   <guid>https://mozartfish.github.io/blog/posts/post-with-code/index.html</guid>
   <pubDate>Sun, 19 Nov 2023 08:00:00 GMT</pubDate>
   <media:content url="https://mozartfish.github.io/blog/posts/post-with-code/image.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Welcome To My Blog</title>
-  <dc:creator>Tristan O&#39;Malley</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/welcome/index.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>This is the first post in a Quarto blog. Welcome!</p>
-<p><img src="https://mozartfish.github.io/blog/posts/welcome/thumbnail.jpg" class="img-fluid"></p>
-<p>Since this post doesn’t specify an explicit <code>image</code>, the first image in the post will be used in the listing page of posts.</p>
-
-
-
- ]]></description>
-  <category>news</category>
-  <guid>https://mozartfish.github.io/blog/posts/welcome/index.html</guid>
-  <pubDate>Thu, 16 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

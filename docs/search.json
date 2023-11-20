@@ -18,13 +18,13 @@
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "This is my first blog post. Welcome!\nI decided to start a blog inspired by Jeremy Howard’s Lecture 0 from the FastAI Course. Jeremy and FastAI used to maintain a blogging and publication tool called FastPages but transitioned to a new publication system called Quarto.\nThis blog is written in Quarto. Why Quarto? In the past I had attempted to used Medium and Substack but never fully spent the time to learn the tools to write a blog post. I decided to learn and publish with Quarto because of its capabilities to produce high quality scientific and technical documents with the ability to embed code and visualizations for review. Another reason why I like Quarto is how easy it is to write markdown and publish a website.\nGoing forward I hope to use Quarto to write about my programming projects, thoughts, and improve my writing."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nNov 19, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\nNo matching items"
   }
 ]
