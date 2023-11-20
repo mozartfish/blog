@@ -1,5 +1,6 @@
 ---
 title: "FastAI Lecture 0: How to FastAI"
+description: FastAI Lecture 0 Notes
 author: "Pranav Rajan"
 date: "2023-11-19"
 categories: [learning, fastai, deep learning]

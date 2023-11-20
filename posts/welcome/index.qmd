@@ -1,5 +1,6 @@
 ---
 title: "Welcome To My Blog"
+description: "First Blog Post"
 author: "Pranav Rajan"
 date: "2023-11-19"
 image: thumbnail.jpg
