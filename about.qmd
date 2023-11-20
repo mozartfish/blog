@@ -1,19 +1,14 @@
 ---
 title: "About"
-image: profile.jpg
 about:
-  template: jolla
+  template: marquee
   links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://www.linkedin.com/in/pranavrajan/
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/mozartfish
 
 ---
-
-About this blog
+Hi, my name is Pranav. The purpose of this blog is to document my projects and thoughts.

@@ -3,17 +3,21 @@ project:
   output-dir: docs
 
 website:
-  title: "Blog"
+  title: "Pranav Rajan's Blog"
+  site-url: https://mozartfish.github.io/blog
+  description: "This is a blog"
   navbar:
+    collapse: true
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/mozartfish
+      - icon: rss 
+        href: index.xml
+
 format:
   html:
-    theme: cosmo
+    theme: litera
     css: styles.css
 
 
