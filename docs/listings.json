@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/fastai-lecture1/index.html",
       "/posts/fastai-lecture0/index.html",
       "/posts/welcome/index.html"
     ]

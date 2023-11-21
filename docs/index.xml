@@ -10,9 +10,78 @@
 <atom:link href="https://mozartfish.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>This is a blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Sun, 19 Nov 2023 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 20 Nov 2023 08:00:00 GMT</lastBuildDate>
 <item>
-  <title>FastAI Lecture 0: How to FastAI</title>
+  <title>FastAI Lecture 1: Getting Started</title>
+  <dc:creator>Pranav Rajan</dc:creator>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lecture1/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4.</p>
+</section>
+<section id="terminology" class="level2">
+<h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
+<ul>
+<li><p><strong>Machine Learning</strong> - The training of programs developed by teaching a computer learn from experience rather than coding the individual steps</p></li>
+<li><p><strong>Deep Learning</strong> - A computer technique that uses layers of neural networks to extract and transform data. Neural networks layers are trained by algorithms that minimize their errors and improve their accuracy. This is how a network learns to perform a specific task. Deep learning is a sub-discipline of <code>machine learning</code>.</p></li>
+<li><p><strong>Dataset</strong> - A bunch of data ie. images, sounds, text, files or anything else.</p></li>
+<li><p><strong>Label</strong> - The data we’re trying to predict ie. dog or cat.</p></li>
+<li><p><strong>Independent Variable</strong> - Data that does not include labels</p></li>
+<li><p><strong>Dependent Variable</strong> - the correct label ie. dog or cat. Also called <strong>targets.</strong></p></li>
+<li><p><strong>Architecture</strong> - The structure of the model we’re trying to fit. A mathematical function that we’re passing the input data and parameters to.</p></li>
+<li><p><strong>Parameters</strong> - The values in the model that change what task it can do and are updated through model training. In Arthur Samuel’s definitions the synonym for parameters is weights which has a different meaning in modern deep learning.</p></li>
+<li><p><strong>Parameter(Weight) Assignment</strong> - Particular choice of values for parameters.</p></li>
+<li><p><strong>Weights</strong> - A particular type of model parameter.</p></li>
+<li><p><strong>Fit</strong> - Update the model parameters such that the predictions of the model using the input data match the target labels.</p></li>
+<li><p><strong>Train</strong> - Synoym for fit.</p></li>
+<li><p><strong>Pretrained Model</strong> - A model that has already been trained, generally using a large dataset and will be fine-tuned ie. resnet class of models.</p></li>
+<li><p><strong>Fine-Tune</strong> - Update a pretrained model for a different task.</p></li>
+<li><p><strong>Epoch</strong> - One complete pass through the input data.</p></li>
+<li><p><strong>Loss</strong> - A measure of how good the model is, chosen to drive training via <code>Stochastic Gradient Descent (SGD)</code>.</p></li>
+<li><p><strong>Metric</strong> - A measurement of how good the model is, using the validation set, chosen for human consumption.</p></li>
+<li><p><strong>Validation Set</strong> - A set of data held out from training, used only for measuring how good the model is.</p></li>
+<li><p><strong>Training Set</strong> - The data used for fitting the model; does not include any data from the validation set.</p></li>
+<li><p><strong>Overfitting</strong> - Training a model in such a way that it remembers specific features of the input data rather than generalizing.</p></li>
+<li><p><strong>Convolutional Neural Network (CNN)</strong> - A type of neural network that works particularly well for computer vision tasks.</p></li>
+<li><p><strong>Transfer Learning:</strong> Using a pretrained model for a task different to what it was originally trained for.</p></li>
+<li></li>
+</ul>
+</section>
+<section id="limitations-of-machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-of-machine-learning">Limitations of Machine Learning</h2>
+<ol type="1">
+<li>A model cannot be created without data</li>
+<li>A model can only learn to operate on patterns seen in input data used to train it</li>
+<li>This learning approach only creates <code>predictions</code> <strong>not</strong> <code>recommend actions</code></li>
+<li>We need <code>labels</code> + <code>data</code> (pictures of dogs and cats that have labels saying which ones are dogs and which ones are cats)</li>
+</ol>
+</section>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<ol type="1">
+<li><p><a href="https://course.fast.ai/Lessons/lesson1.html">FastAI Lesson 1: Getting Started</a></p></li>
+<li><p><a href="https://colab.research.google.com/github/fastai/fastbook/blob/master/01_intro.ipynb">FastAI Chapter 1, Intro</a></p></li>
+<li><p><a href="https://www.kaggle.com/">Kaggle</a></p></li>
+<li><p><a href="https://colab.google/">Google Colab</a></p></li>
+</ol>
+
+
+</section>
+
+ ]]></description>
+  <category>learning</category>
+  <category>fastai</category>
+  <category>deep learning</category>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lecture1/index.html</guid>
+  <pubDate>Mon, 20 Nov 2023 08:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>FastAI Lesson 0: How to FastAI</title>
   <dc:creator>Pranav Rajan</dc:creator>
   <link>https://mozartfish.github.io/blog/posts/fastai-lecture0/index.html</link>
   <description><![CDATA[ 
@@ -20,8 +89,8 @@
 
 
 
-<p>I’ve recently started <a href="https://course.fast.ai/">FastAI Practical Deep Learning for Coders</a> to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with <code>Lecture 0</code>. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. <code>Lecture 0</code> isn’t officially presented in the course until <code>Lecture 3</code> but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.</p>
-<p><code>Lecture 0</code> doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the <code>Lecture 0</code> project. <code>Lecture 0</code> was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to <code>Discord</code> , <code>Mastodon</code>, and <code>Bluesky</code>. I’d recommend checking out the <code>FastAI Forums</code> and <code>FastAI Discord</code> since there’s an active community and study groups specifically for this course.</p>
+<p>I’ve recently started <a href="https://course.fast.ai/">FastAI Practical Deep Learning for Coders</a> to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with <code>Lesson 0</code>. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. <code>Lesson 0</code> isn’t officially presented in the course until <code>Lesson 3</code> but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.</p>
+<p><code>Lesson 0</code> doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the <code>Lesson 0</code> project. <code>Lesson 0</code> was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to <code>Discord</code> , <code>Mastodon</code>, and <code>Bluesky</code>. I’d recommend checking out the <code>FastAI Forums</code>, <code>FastAI Discord</code>, and <code>BlueSky</code>.</p>
 <section id="jeremy-howards-advice" class="level2">
 <h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
 <ol type="1">
@@ -32,7 +101,7 @@
 </section>
 <section id="how-to-watch-a-fastai-lesson" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-watch-a-fastai-lesson">How to Watch A FastAI Lesson</h2>
-<p>This advice was presented by Jeremy in <code>Lecture 0</code></p>
+<p>This advice was presented by Jeremy Howard in <code>Lesson 0</code></p>
 <ol type="1">
 <li><p>Watch FastAI Lecture</p></li>
 <li><p>Run notebooks and code presented in the lecture and experiment with code</p></li>
@@ -43,9 +112,10 @@
 <section id="resources" class="level2">
 <h2 class="anchored" data-anchor-id="resources">Resources</h2>
 <ol type="1">
-<li><p><a href="https://www.youtube.com/watch?v=gGxe2mN3kAg">FastAI Lecture 0: How to FastAI</a></p></li>
+<li><p><a href="https://www.youtube.com/watch?v=gGxe2mN3kAg">FastAI Lesson 0: How to FastAI</a></p></li>
 <li><p><a href="https://christinemcleavey.com/learning-about-deep-learning/">Christine Mcleavey’s Blog</a></p></li>
 <li><p><a href="https://quarto.org/">Quarto</a></p></li>
+<li><p><a href="https://bsky.app/">Bluesky</a></p></li>
 </ol>
 
 

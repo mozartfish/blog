@@ -2,18 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mozartfish.github.io/blog/about.html</loc>
-    <lastmod>2023-11-20T04:23:34.841Z</lastmod>
+    <lastmod>2023-11-21T08:16:10.633Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/welcome/index.html</loc>
-    <lastmod>2023-11-20T04:23:34.093Z</lastmod>
+    <lastmod>2023-11-21T08:16:09.801Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/fastai-lecture0/index.html</loc>
-    <lastmod>2023-11-20T04:23:33.757Z</lastmod>
+    <lastmod>2023-11-21T08:16:09.037Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lecture1/index.html</loc>
+    <lastmod>2023-11-21T08:16:09.477Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/index.html</loc>
-    <lastmod>2023-11-20T04:23:34.557Z</lastmod>
+    <lastmod>2023-11-21T08:16:10.325Z</lastmod>
   </url>
 </urlset>
