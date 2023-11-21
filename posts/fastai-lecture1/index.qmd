@@ -1,6 +1,6 @@
 ---
 title: "FastAI Lesson 1: Getting Started"
-description: FastAI Lecture 1 Notes
+description: FastAI Lesson 1 Notes
 author: "Pranav Rajan"
 date: "2023-11-20"
 categories: [learning, fastai, deep learning]
