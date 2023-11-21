@@ -44,35 +44,35 @@
   {
     "objectID": "posts/fastai-lecture1/index.html",
     "href": "posts/fastai-lecture1/index.html",
-    "title": "FastAI Lecture 1: Getting Started",
+    "title": "FastAI Lesson 1: Getting Started",
     "section": "",
     "text": "In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4."
   },
   {
     "objectID": "posts/fastai-lecture1/index.html#summary",
     "href": "posts/fastai-lecture1/index.html#summary",
-    "title": "FastAI Lecture 1: Getting Started",
+    "title": "FastAI Lesson 1: Getting Started",
     "section": "",
     "text": "In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4."
   },
   {
     "objectID": "posts/fastai-lecture1/index.html#terminology",
     "href": "posts/fastai-lecture1/index.html#terminology",
-    "title": "FastAI Lecture 1: Getting Started",
+    "title": "FastAI Lesson 1: Getting Started",
     "section": "Terminology",
     "text": "Terminology\n\nMachine Learning - The training of programs developed by teaching a computer learn from experience rather than coding the individual steps\nDeep Learning - A computer technique that uses layers of neural networks to extract and transform data. Neural networks layers are trained by algorithms that minimize their errors and improve their accuracy. This is how a network learns to perform a specific task. Deep learning is a sub-discipline of machine learning.\nDataset - A bunch of data ie. images, sounds, text, files or anything else.\nLabel - The data we’re trying to predict ie. dog or cat.\nIndependent Variable - Data that does not include labels\nDependent Variable - the correct label ie. dog or cat. Also called targets.\nArchitecture - The structure of the model we’re trying to fit. A mathematical function that we’re passing the input data and parameters to.\nParameters - The values in the model that change what task it can do and are updated through model training. In Arthur Samuel’s definitions the synonym for parameters is weights which has a different meaning in modern deep learning.\nParameter(Weight) Assignment - Particular choice of values for parameters.\nWeights - A particular type of model parameter.\nFit - Update the model parameters such that the predictions of the model using the input data match the target labels.\nTrain - Synoym for fit.\nPretrained Model - A model that has already been trained, generally using a large dataset and will be fine-tuned ie. resnet class of models.\nFine-Tune - Update a pretrained model for a different task.\nEpoch - One complete pass through the input data.\nLoss - A measure of how good the model is, chosen to drive training via Stochastic Gradient Descent (SGD).\nMetric - A measurement of how good the model is, using the validation set, chosen for human consumption.\nValidation Set - A set of data held out from training, used only for measuring how good the model is.\nTraining Set - The data used for fitting the model; does not include any data from the validation set.\nOverfitting - Training a model in such a way that it remembers specific features of the input data rather than generalizing.\nConvolutional Neural Network (CNN) - A type of neural network that works particularly well for computer vision tasks.\nTransfer Learning: Using a pretrained model for a task different to what it was originally trained for."
   },
   {
     "objectID": "posts/fastai-lecture1/index.html#limitations-of-machine-learning",
     "href": "posts/fastai-lecture1/index.html#limitations-of-machine-learning",
-    "title": "FastAI Lecture 1: Getting Started",
+    "title": "FastAI Lesson 1: Getting Started",
     "section": "Limitations of Machine Learning",
     "text": "Limitations of Machine Learning\n\nA model cannot be created without data\nA model can only learn to operate on patterns seen in input data used to train it\nThis learning approach only creates predictions not recommend actions\nWe need labels + data (pictures of dogs and cats that have labels saying which ones are dogs and which ones are cats)"
   },
   {
     "objectID": "posts/fastai-lecture1/index.html#resources",
     "href": "posts/fastai-lecture1/index.html#resources",
-    "title": "FastAI Lecture 1: Getting Started",
+    "title": "FastAI Lesson 1: Getting Started",
     "section": "Resources",
     "text": "Resources\n\nFastAI Lesson 1: Getting Started\nFastAI Chapter 1, Intro\nKaggle\nGoogle Colab"
   },
@@ -81,6 +81,6 @@
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "FastAI Lecture 1: Getting Started\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lecture 1 Notes\n\n\n\n\n\n\nNov 20, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nFastAI Lesson 0: How to FastAI\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 0 Notes\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\nFirst Blog Post\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\nNo matching items"
+    "text": "FastAI Lesson 1: Getting Started\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lecture 1 Notes\n\n\n\n\n\n\nNov 20, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nFastAI Lesson 0: How to FastAI\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 0 Notes\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\nFirst Blog Post\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\nNo matching items"
   }
 ]
