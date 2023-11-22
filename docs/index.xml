@@ -10,11 +10,10 @@
 <atom:link href="https://mozartfish.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>This is a blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 20 Nov 2023 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 21 Nov 2023 08:00:00 GMT</lastBuildDate>
 <item>
   <title>FastAI Lesson 1: Getting Started</title>
-  <dc:creator>Pranav Rajan</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lecture1/index.html</link>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html</link>
   <description><![CDATA[ 
 
 
@@ -22,7 +21,7 @@
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4.</p>
+<p>In this lesson, Jeremy walks through a bird classification example which back in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I found some of the definitions and the code in this lesson challenging which is where Chapter 1 was really helpful. I would strongly recommend checking out the definitions in this chapter because they are still used today when talking about more advanced models like GPT-4.</p>
 </section>
 <section id="terminology" class="level2">
 <h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
@@ -48,8 +47,8 @@
 <li><p><strong>Training Set</strong> - The data used for fitting the model; does not include any data from the validation set.</p></li>
 <li><p><strong>Overfitting</strong> - Training a model in such a way that it remembers specific features of the input data rather than generalizing.</p></li>
 <li><p><strong>Convolutional Neural Network (CNN)</strong> - A type of neural network that works particularly well for computer vision tasks.</p></li>
-<li><p><strong>Transfer Learning:</strong> Using a pretrained model for a task different to what it was originally trained for.</p></li>
-<li></li>
+<li><p><strong>Transfer Learning</strong> - Using a pretrained model for a task different to what it was originally trained for.</p></li>
+<li><p><strong>Head Layer</strong> - When using a pretrained model, replace the last layer with one or more layers with randomized weights of an appropriate size for the dataset you are working with. This customizes a model specifically for your task when using a pretrained model.</p></li>
 </ul>
 </section>
 <section id="limitations-of-machine-learning" class="level2">
@@ -61,13 +60,1014 @@
 <li>We need <code>labels</code> + <code>data</code> (pictures of dogs and cats that have labels saying which ones are dogs and which ones are cats)</li>
 </ol>
 </section>
+<section id="is-it-a-bird-example" class="level2">
+<h2 class="anchored" data-anchor-id="is-it-a-bird-example">Is It a Bird? Example</h2>
+<p>The following code in this example is created and written by Jeremy Howard and FastAI as found in the example <a href="https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data">Is it a bird? Creating a model from your own data</a>. My modification was adding comments for myself to the data block section so that I could understand what each part of the datablock is doing.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:05:02.130923Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:05:02.130165Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:05:18.134163Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:05:18.132504Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:05:02.130893Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os </span>
+<span id="cb1-2">iskaggle <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'KAGGLE_KERNEL_RUN_TYPE'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>)</span>
+<span id="cb1-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> iskaggle:</span>
+<span id="cb1-4">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Uqq fastai duckduckgo_search</span></code></pre></div>
+</div>
+<section id="step-1-gather-data" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-gather-data">Step 1: Gather Data</h3>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:11:11.575122Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:11:11.574696Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:11:11.933428Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:11:11.932692Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:11:11.575080Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> duckduckgo_search <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ddg_images </span>
+<span id="cb2-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> </span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># helper function for searching for images </span></span>
+<span id="cb2-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> search_images(term, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>):</span>
+<span id="cb2-6">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Searching for '</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>term<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'"</span>)</span>
+<span id="cb2-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> L(ddg_images(term, max_results<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>max_images)).itemgot(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'image'</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:11:50.875794Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:11:50.875301Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:11:51.988151Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:11:51.987179Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:11:50.875763Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">urls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bird photos'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-2">urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'bird photos'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>'https://images.alphacoders.com/492/492674.jpg'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:13:07.435284Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:13:07.434751Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:13:15.880636Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:13:15.879720Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:13:07.435241Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastdownload <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> download_url </span>
+<span id="cb7-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb7-3">dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bird.jpg'</span></span>
+<span id="cb7-4">download_url(urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], dest, show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb7-5">im <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(dest)</span>
+<span id="cb7-6">im.to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span>
+<span id="cb7-7"></span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.10/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version &gt;=1.16.5 and &lt;1.23.0 is required for this version of SciPy (detected version 1.24.3
+  warnings.warn(f"A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}"</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:15:07.714114Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:15:07.713714Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:15:09.048645Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:15:09.047656Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:15:07.714085Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">download_url(search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'forest photos'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'forest.jpg'</span>, </span>
+<span id="cb9-2">             show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb9-3">Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'forest.jpg'</span>).to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'forest photos'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:19:42.776156Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:19:42.775040Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:21:22.118506Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:21:22.117220Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:19:42.776115Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">searches <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'forest'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bird'</span></span>
+<span id="cb12-2">path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bird_or_not'</span>)</span>
+<span id="cb12-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sleep </span>
+<span id="cb12-4"></span>
+<span id="cb12-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> searches:</span>
+<span id="cb12-6">    dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span>
+<span id="cb12-7">    dest.mkdir(exist_ok<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, parents<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb12-8">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> photo'</span>))</span>
+<span id="cb12-9">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server</span></span>
+<span id="cb12-10">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> sun photo'</span>))</span>
+<span id="cb12-11">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server </span></span>
+<span id="cb12-12">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> shade photo'</span>))</span>
+<span id="cb12-13">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server </span></span>
+<span id="cb12-14">    resize_images(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o, max_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">400</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'forest photo'
+Searching for 'forest sun photo'
+Searching for 'forest shade photo'
+Searching for 'bird photo'
+Searching for 'bird sun photo'
+Searching for 'bird shade photo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-train-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-train-model">Step 2: Train Model</h3>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:21:43.415508Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:21:43.415132Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:21:44.330428Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:21:44.329327Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:21:43.415478Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove images that failed to download properly </span></span>
+<span id="cb15-2">failed <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> verify_images(get_image_files(path))</span>
+<span id="cb15-3">failed.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">map</span>(Path.unlink)</span>
+<span id="cb15-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(failed)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>3</code></pre>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:24:10.522517Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:24:10.522169Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:24:15.181854Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:24:15.180708Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:24:10.522489Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into training set, validation set </span></span>
+<span id="cb17-2">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> DataBlock(</span>
+<span id="cb17-3">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># specify input type(image), output type(category aka label)</span></span>
+<span id="cb17-4">    blocks<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(ImageBlock, CategoryBlock),</span>
+<span id="cb17-5">    get_items<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>get_image_files,</span>
+<span id="cb17-6">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into 80% training data, and 20% validation data</span></span>
+<span id="cb17-7">    splitter<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RandomSplitter(valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>),</span>
+<span id="cb17-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define the label </span></span>
+<span id="cb17-9">    get_y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>parent_label,</span>
+<span id="cb17-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># standardize and resize all images to 192 x 192</span></span>
+<span id="cb17-11">    item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'squish'</span>)]</span>
+<span id="cb17-12">).dataloaders(path, bs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>)</span>
+<span id="cb17-13"></span>
+<span id="cb17-14">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:29:36.801651Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:29:36.800809Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:29:42.341723Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:29:42.340624Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:29:36.801604Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># train resnet on the data</span></span>
+<span id="cb18-2">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> vision_learner(dls, resnet18, metrics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>error_rate)</span>
+<span id="cb18-3">learn.fine_tune(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.744936</td>
+<td>0.402673</td>
+<td>0.156250</td>
+<td>00:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.178611</td>
+<td>0.097689</td>
+<td>0.031250</td>
+<td>00:01</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.117756</td>
+<td>0.136063</td>
+<td>0.031250</td>
+<td>00:01</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.079709</td>
+<td>0.154602</td>
+<td>0.031250</td>
+<td>00:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="step-3-test-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-test-model">Step 3: Test Model</h3>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:29:43.986183Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:29:43.985792Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:29:44.105360Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:29:44.104307Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:29:43.986152Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">is_bird,_,probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.predict(PILImage.create(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bird.jpg'</span>))</span>
+<span id="cb19-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"This is a : </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>is_bird<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">."</span>)</span>
+<span id="cb19-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Probability it's a bird: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>probs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is a : bird.
+Probability it's a bird: 0.9996</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="picasso-cubist-painting-or-georges-bracques-cubist-painting" class="level2">
+<h2 class="anchored" data-anchor-id="picasso-cubist-painting-or-georges-bracques-cubist-painting">Picasso Cubist Painting or Georges Bracques Cubist Painting</h2>
+<p>This code was written by me based on Jeremy and FastAI’s bird example. I picked this example because of an interest in art, the similarity between Picasso and Braque’s cubist art, and the question of whether a computer would be able to tell the difference between the two artists when shown a random cubist painting by either Picasso or Braque.</p>
+<section id="step-1-gather-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-gather-data-1">Step 1: Gather Data</h3>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:32:56.351463Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:32:56.351013Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:32:57.031947Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:32:57.031020Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:32:56.351430Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1">urls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Pablo Picasso Cubist Painting'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb21-2">urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'Pablo Picasso Cubist Painting'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>'http://www.baaqii.com/promanage/productimage/OP/OP0288.jpg'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:33:24.105350Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:33:24.104946Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:33:24.810112Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:33:24.809127Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:33:24.105319Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastdownload <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> download_url </span>
+<span id="cb25-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb25-3">dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso.jpg'</span></span>
+<span id="cb25-4">download_url(urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], dest, show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb25-5">im <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(dest)</span>
+<span id="cb25-6">im.to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:34:37.957206Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:34:37.956156Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:34:38.684411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:34:38.683411Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:34:37.957157Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1">download_url(search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'George Braque Cubist Painting'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], </span>
+<span id="cb26-2">             <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'braque.jpg'</span>, </span>
+<span id="cb26-3">             show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb26-4">Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'braque.jpg'</span>).to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'George Braque Cubist Painting'</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:39:27.385024Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:39:27.384560Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:40:49.816235Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:40:49.814961Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:39:27.384989Z&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1">searches <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Pablo Picasso'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'George Braque'</span></span>
+<span id="cb28-2">path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso_or_braque'</span>)</span>
+<span id="cb28-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sleep </span>
+<span id="cb28-4"></span>
+<span id="cb28-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> searches:</span>
+<span id="cb28-6">    dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span>
+<span id="cb28-7">    dest.mkdir(exist_ok<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, parents<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb28-8">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> cubist painting'</span>))</span>
+<span id="cb28-9">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server</span></span>
+<span id="cb28-10">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> fauvist painting'</span>))</span>
+<span id="cb28-11">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server </span></span>
+<span id="cb28-12">    download_images(dest, urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> geometric painting'</span>))</span>
+<span id="cb28-13">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server </span></span>
+<span id="cb28-14">    resize_images(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o, max_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">400</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'Pablo Picasso cubist painting'
+Searching for 'Pablo Picasso fauvist painting'
+Searching for 'Pablo Picasso geometric painting'
+Searching for 'George Braque cubist painting'
+Searching for 'George Braque fauvist painting'
+Searching for 'George Braque geometric painting'</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-train-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-train-model-1">Step 2: Train Model</h3>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:40:49.819938Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:40:49.819467Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:40:50.977727Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:40:50.976477Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:40:49.819897Z&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove images that failed to download properly </span></span>
+<span id="cb30-2">failed <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> verify_images(get_image_files(path))</span>
+<span id="cb30-3">failed.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">map</span>(Path.unlink)</span>
+<span id="cb30-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(failed)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>2</code></pre>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:40:50.979956Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:40:50.979488Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:40:51.979411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:40:51.978394Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:40:50.979914Z&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into training set, validation set </span></span>
+<span id="cb32-2">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> DataBlock(</span>
+<span id="cb32-3">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># specify input type(image), output type(category aka label)</span></span>
+<span id="cb32-4">    blocks<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(ImageBlock, CategoryBlock),</span>
+<span id="cb32-5">    get_items<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>get_image_files,</span>
+<span id="cb32-6">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into 80% training data, and 20% validation data</span></span>
+<span id="cb32-7">    splitter<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RandomSplitter(valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>),</span>
+<span id="cb32-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define the label </span></span>
+<span id="cb32-9">    get_y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>parent_label,</span>
+<span id="cb32-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># standardize and resize all images to 192 x 192</span></span>
+<span id="cb32-11">    item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'squish'</span>)]</span>
+<span id="cb32-12">).dataloaders(path, bs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>)</span>
+<span id="cb32-13"></span>
+<span id="cb32-14">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:43:02.501100Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:43:02.499961Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:43:10.282060Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:43:10.280941Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:43:02.501063Z&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># train resnet on the data</span></span>
+<span id="cb33-2">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> vision_learner(dls, resnet18, metrics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>error_rate)</span>
+<span id="cb33-3">learn.fine_tune(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.963409</td>
+<td>0.409861</td>
+<td>0.157143</td>
+<td>00:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.281930</td>
+<td>0.232642</td>
+<td>0.057143</td>
+<td>00:01</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.227495</td>
+<td>0.084337</td>
+<td>0.028571</td>
+<td>00:01</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.163790</td>
+<td>0.051675</td>
+<td>0.014286</td>
+<td>00:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="step-3-test-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-test-model-1">Step 3: Test Model</h3>
+<p>There is something wrong here because the probability is incorrect. I can’t figure out whether I messed up in the data phase, architecture choice (resnet34 instead of resnet18), or a programming mistake. My guess is that program should have a probability of choosing the right result around the same percentage as the bird example. If anyone knows what the issue might be, please reach out.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:47:00.809792Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:47:00.808871Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:47:00.889913Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:47:00.888745Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:47:00.809752Z&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1">is_picasso,_,probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.predict(PILImage.create(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso.jpg'</span>))</span>
+<span id="cb34-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"This is a: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>is_picasso<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">."</span>)</span>
+<span id="cb34-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Probability it's a picasso: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>probs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is a: Pablo Picasso.
+Probability it's a picasso: 0.0006</code></pre>
+</div>
+</div>
+</section>
+</section>
 <section id="resources" class="level2">
 <h2 class="anchored" data-anchor-id="resources">Resources</h2>
 <ol type="1">
-<li><p><a href="https://course.fast.ai/Lessons/lesson1.html">FastAI Lesson 1: Getting Started</a></p></li>
-<li><p><a href="https://colab.research.google.com/github/fastai/fastbook/blob/master/01_intro.ipynb">FastAI Chapter 1, Intro</a></p></li>
-<li><p><a href="https://www.kaggle.com/">Kaggle</a></p></li>
-<li><p><a href="https://colab.google/">Google Colab</a></p></li>
+<li><a href="https://course.fast.ai/Lessons/lesson1.html">FastAI Lesson 1: Getting Started</a></li>
+<li><a href="https://colab.research.google.com/github/fastai/fastbook/blob/master/01_intro.ipynb">FastAI Chapter 1, Intro</a></li>
+<li><a href="https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data">Is it a bird? Creating a model from your own data</a></li>
+<li><a href="https://www.kaggle.com/code/jhoward/jupyter-notebook-101">Jupyter Notebook 101</a></li>
+<li><a href="https://docs.fast.ai/tutorial.vision.html">FastAI Docs</a></li>
 </ol>
 
 
@@ -77,13 +1077,13 @@
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lecture1/index.html</guid>
-  <pubDate>Mon, 20 Nov 2023 08:00:00 GMT</pubDate>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html</guid>
+  <pubDate>Tue, 21 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
   <title>FastAI Lesson 0: How to FastAI</title>
   <dc:creator>Pranav Rajan</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lecture0/index.html</link>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</link>
   <description><![CDATA[ 
 
 
@@ -125,7 +1125,7 @@
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lecture0/index.html</guid>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</guid>
   <pubDate>Sun, 19 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 <item>

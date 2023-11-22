@@ -7,6 +7,83 @@
     "text": "Hi, my name is Pranav. The purpose of this blog is to document my projects and thoughts."
   },
   {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "",
+    "text": "In this lesson, Jeremy walks through a bird classification example which back in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I found some of the definitions and the code in this lesson challenging which is where Chapter 1 was really helpful. I would strongly recommend checking out the definitions in this chapter because they are still used today when talking about more advanced models like GPT-4."
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#summary",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#summary",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "",
+    "text": "In this lesson, Jeremy walks through a bird classification example which back in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I found some of the definitions and the code in this lesson challenging which is where Chapter 1 was really helpful. I would strongly recommend checking out the definitions in this chapter because they are still used today when talking about more advanced models like GPT-4."
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#terminology",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#terminology",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "Terminology",
+    "text": "Terminology\n\nMachine Learning - The training of programs developed by teaching a computer learn from experience rather than coding the individual steps\nDeep Learning - A computer technique that uses layers of neural networks to extract and transform data. Neural networks layers are trained by algorithms that minimize their errors and improve their accuracy. This is how a network learns to perform a specific task. Deep learning is a sub-discipline of machine learning.\nDataset - A bunch of data ie. images, sounds, text, files or anything else.\nLabel - The data we’re trying to predict ie. dog or cat.\nIndependent Variable - Data that does not include labels\nDependent Variable - the correct label ie. dog or cat. Also called targets.\nArchitecture - The structure of the model we’re trying to fit. A mathematical function that we’re passing the input data and parameters to.\nParameters - The values in the model that change what task it can do and are updated through model training. In Arthur Samuel’s definitions the synonym for parameters is weights which has a different meaning in modern deep learning.\nParameter(Weight) Assignment - Particular choice of values for parameters.\nWeights - A particular type of model parameter.\nFit - Update the model parameters such that the predictions of the model using the input data match the target labels.\nTrain - Synoym for fit.\nPretrained Model - A model that has already been trained, generally using a large dataset and will be fine-tuned ie. resnet class of models.\nFine-Tune - Update a pretrained model for a different task.\nEpoch - One complete pass through the input data.\nLoss - A measure of how good the model is, chosen to drive training via Stochastic Gradient Descent (SGD).\nMetric - A measurement of how good the model is, using the validation set, chosen for human consumption.\nValidation Set - A set of data held out from training, used only for measuring how good the model is.\nTraining Set - The data used for fitting the model; does not include any data from the validation set.\nOverfitting - Training a model in such a way that it remembers specific features of the input data rather than generalizing.\nConvolutional Neural Network (CNN) - A type of neural network that works particularly well for computer vision tasks.\nTransfer Learning - Using a pretrained model for a task different to what it was originally trained for.\nHead Layer - When using a pretrained model, replace the last layer with one or more layers with randomized weights of an appropriate size for the dataset you are working with. This customizes a model specifically for your task when using a pretrained model."
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#limitations-of-machine-learning",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#limitations-of-machine-learning",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "Limitations of Machine Learning",
+    "text": "Limitations of Machine Learning\n\nA model cannot be created without data\nA model can only learn to operate on patterns seen in input data used to train it\nThis learning approach only creates predictions not recommend actions\nWe need labels + data (pictures of dogs and cats that have labels saying which ones are dogs and which ones are cats)"
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#is-it-a-bird-example",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#is-it-a-bird-example",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "Is It a Bird? Example",
+    "text": "Is It a Bird? Example\nThe following code in this example is created and written by Jeremy Howard and FastAI as found in the example Is it a bird? Creating a model from your own data. My modification was adding comments for myself to the data block section so that I could understand what each part of the datablock is doing.\n\nimport os \niskaggle = os.environ.get('KAGGLE_KERNEL_RUN_TYPE', '')\nif iskaggle:\n    !pip install -Uqq fastai duckduckgo_search\n\n\nStep 1: Gather Data\n\nfrom duckduckgo_search import ddg_images \nfrom fastcore.all import * \n\n# helper function for searching for images \ndef search_images(term, max_images=30):\n    print(f\"Searching for '{term}'\")\n    return L(ddg_images(term, max_results=max_images)).itemgot('image')\n\n\nurls = search_images('bird photos', max_images=1)\nurls[0]\n\nSearching for 'bird photos'\n\n\n/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n\n\n'https://images.alphacoders.com/492/492674.jpg'\n\n\n\nfrom fastdownload import download_url \nfrom fastai.vision.all import *\ndest = 'bird.jpg'\ndownload_url(urls[0], dest, show_progress=False)\nim = Image.open(dest)\nim.to_thumb(256, 256)\n\n\n/opt/conda/lib/python3.10/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version &gt;=1.16.5 and &lt;1.23.0 is required for this version of SciPy (detected version 1.24.3\n  warnings.warn(f\"A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}\"\n\n\n\n\n\n\ndownload_url(search_images('forest photos', max_images=1)[0], 'forest.jpg', \n             show_progress=False)\nImage.open('forest.jpg').to_thumb(256, 256)\n\nSearching for 'forest photos'\n\n\n/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n\n\n\n\n\n\nsearches = 'forest', 'bird'\npath = Path('bird_or_not')\nfrom time import sleep \n\nfor o in searches:\n    dest = (path/o)\n    dest.mkdir(exist_ok=True, parents=True)\n    download_images(dest, urls=search_images(f'{o} photo'))\n    sleep(10) # sleep between searches to avoid spamming server\n    download_images(dest, urls=search_images(f'{o} sun photo'))\n    sleep(10) # sleep between searches to avoid spamming server \n    download_images(dest, urls=search_images(f'{o} shade photo'))\n    sleep(10) # sleep between searches to avoid spamming server \n    resize_images(path/o, max_size=400, dest=path/o)\n\nSearching for 'forest photo'\nSearching for 'forest sun photo'\nSearching for 'forest shade photo'\nSearching for 'bird photo'\nSearching for 'bird sun photo'\nSearching for 'bird shade photo'\n\n\n/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n\n\n\n\nStep 2: Train Model\n\n# remove images that failed to download properly \nfailed = verify_images(get_image_files(path))\nfailed.map(Path.unlink)\nlen(failed)\n\n3\n\n\n\n# split data into training set, validation set \ndls = DataBlock(\n    # specify input type(image), output type(category aka label)\n    blocks=(ImageBlock, CategoryBlock),\n    get_items=get_image_files,\n    # split data into 80% training data, and 20% validation data\n    splitter=RandomSplitter(valid_pct=0.2, seed=42),\n    # define the label \n    get_y=parent_label,\n    # standardize and resize all images to 192 x 192\n    item_tfms=[Resize(192, method='squish')]\n).dataloaders(path, bs=32)\n\ndls.show_batch(max_n=6)\n\n\n\n\n\n# train resnet on the data\nlearn = vision_learner(dls, resnet18, metrics=error_rate)\nlearn.fine_tune(3)\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n0.744936\n0.402673\n0.156250\n00:01\n\n\n\n\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n0.178611\n0.097689\n0.031250\n00:01\n\n\n1\n0.117756\n0.136063\n0.031250\n00:01\n\n\n2\n0.079709\n0.154602\n0.031250\n00:01\n\n\n\n\n\n\n\nStep 3: Test Model\n\nis_bird,_,probs = learn.predict(PILImage.create('bird.jpg'))\nprint(f\"This is a : {is_bird}.\")\nprint(f\"Probability it's a bird: {probs[0]:.4f}\")\n\n\n\n\n\n\n\n\nThis is a : bird.\nProbability it's a bird: 0.9996"
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#picasso-cubist-painting-or-georges-bracques-cubist-painting",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#picasso-cubist-painting-or-georges-bracques-cubist-painting",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "Picasso Cubist Painting or Georges Bracques Cubist Painting",
+    "text": "Picasso Cubist Painting or Georges Bracques Cubist Painting\nThis code was written by me based on Jeremy and FastAI’s bird example. I picked this example because of an interest in art, the similarity between Picasso and Braque’s cubist art, and the question of whether a computer would be able to tell the difference between the two artists when shown a random cubist painting by either Picasso or Braque.\n\nStep 1: Gather Data\n\nurls = search_images('Pablo Picasso Cubist Painting', max_images=1)\nurls[0]\n\nSearching for 'Pablo Picasso Cubist Painting'\n\n\n/opt/conda/lib/python3.10/site-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n\n\n'http://www.baaqii.com/promanage/productimage/OP/OP0288.jpg'\n\n\n\nfrom fastdownload import download_url \nfrom fastai.vision.all import *\ndest = 'picasso.jpg'\ndownload_url(urls[0], dest, show_progress=False)\nim = Image.open(dest)\nim.to_thumb(256, 256)\n\n\n\n\n\ndownload_url(search_images('George Braque Cubist Painting', max_images=1)[0], \n             'braque.jpg', \n             show_progress=False)\nImage.open('braque.jpg').to_thumb(256, 256)\n\nSearching for 'George Braque Cubist Painting'\n\n\n\n\n\n\nsearches = 'Pablo Picasso', 'George Braque'\npath = Path('picasso_or_braque')\nfrom time import sleep \n\nfor o in searches:\n    dest = (path/o)\n    dest.mkdir(exist_ok=True, parents=True)\n    download_images(dest, urls=search_images(f'{o} cubist painting'))\n    sleep(10) # sleep between searches to avoid spamming server\n    download_images(dest, urls=search_images(f'{o} fauvist painting'))\n    sleep(10) # sleep between searches to avoid spamming server \n    download_images(dest, urls=search_images(f'{o} geometric painting'))\n    sleep(10) # sleep between searches to avoid spamming server \n    resize_images(path/o, max_size=400, dest=path/o)\n\nSearching for 'Pablo Picasso cubist painting'\nSearching for 'Pablo Picasso fauvist painting'\nSearching for 'Pablo Picasso geometric painting'\nSearching for 'George Braque cubist painting'\nSearching for 'George Braque fauvist painting'\nSearching for 'George Braque geometric painting'\n\n\n\n\nStep 2: Train Model\n\n# remove images that failed to download properly \nfailed = verify_images(get_image_files(path))\nfailed.map(Path.unlink)\nlen(failed)\n\n2\n\n\n\n# split data into training set, validation set \ndls = DataBlock(\n    # specify input type(image), output type(category aka label)\n    blocks=(ImageBlock, CategoryBlock),\n    get_items=get_image_files,\n    # split data into 80% training data, and 20% validation data\n    splitter=RandomSplitter(valid_pct=0.2, seed=42),\n    # define the label \n    get_y=parent_label,\n    # standardize and resize all images to 192 x 192\n    item_tfms=[Resize(192, method='squish')]\n).dataloaders(path, bs=32)\n\ndls.show_batch(max_n=6)\n\n\n\n\n\n# train resnet on the data\nlearn = vision_learner(dls, resnet18, metrics=error_rate)\nlearn.fine_tune(3)\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n0.963409\n0.409861\n0.157143\n00:01\n\n\n\n\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n0.281930\n0.232642\n0.057143\n00:01\n\n\n1\n0.227495\n0.084337\n0.028571\n00:01\n\n\n2\n0.163790\n0.051675\n0.014286\n00:01\n\n\n\n\n\n\n\nStep 3: Test Model\nThere is something wrong here because the probability is incorrect. I can’t figure out whether I messed up in the data phase, architecture choice (resnet34 instead of resnet18), or a programming mistake. My guess is that program should have a probability of choosing the right result around the same percentage as the bird example. If anyone knows what the issue might be, please reach out.\n\nis_picasso,_,probs = learn.predict(PILImage.create('picasso.jpg'))\nprint(f\"This is a: {is_picasso}.\")\nprint(f\"Probability it's a picasso: {probs[0]:.4f}\")\n\n\n\n\n\n\n\n\nThis is a: Pablo Picasso.\nProbability it's a picasso: 0.0006"
+  },
+  {
+    "objectID": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#resources",
+    "href": "posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html#resources",
+    "title": "FastAI Lesson 1: Getting Started",
+    "section": "Resources",
+    "text": "Resources\n\nFastAI Lesson 1: Getting Started\nFastAI Chapter 1, Intro\nIs it a bird? Creating a model from your own data\nJupyter Notebook 101\nFastAI Docs"
+  },
+  {
+    "objectID": "posts/fastai-lesson0/index.html",
+    "href": "posts/fastai-lesson0/index.html",
+    "title": "FastAI Lesson 0: How to FastAI",
+    "section": "",
+    "text": "I’ve recently started FastAI Practical Deep Learning for Coders to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with Lesson 0. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. Lesson 0 isn’t officially presented in the course until Lesson 3 but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.\nLesson 0 doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the Lesson 0 project. Lesson 0 was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to Discord , Mastodon, and Bluesky. I’d recommend checking out the FastAI Forums, FastAI Discord, and BlueSky."
+  },
+  {
+    "objectID": "posts/fastai-lesson0/index.html#jeremy-howards-advice",
+    "href": "posts/fastai-lesson0/index.html#jeremy-howards-advice",
+    "title": "FastAI Lesson 0: How to FastAI",
+    "section": "Jeremy Howard’s Advice",
+    "text": "Jeremy Howard’s Advice\n\nCommit to finish the course\nTry to finish one really good project to show off what you’ve learned in the course\nShare and blog about your work"
+  },
+  {
+    "objectID": "posts/fastai-lesson0/index.html#how-to-watch-a-fastai-lesson",
+    "href": "posts/fastai-lesson0/index.html#how-to-watch-a-fastai-lesson",
+    "title": "FastAI Lesson 0: How to FastAI",
+    "section": "How to Watch A FastAI Lesson",
+    "text": "How to Watch A FastAI Lesson\nThis advice was presented by Jeremy Howard in Lesson 0\n\nWatch FastAI Lecture\nRun notebooks and code presented in the lecture and experiment with code\nReproduce notebook from a clean notebook (Jeremy provides clean notebooks on github)\nRepeat with a different dataset (could be personal project)"
+  },
+  {
+    "objectID": "posts/fastai-lesson0/index.html#resources",
+    "href": "posts/fastai-lesson0/index.html#resources",
+    "title": "FastAI Lesson 0: How to FastAI",
+    "section": "Resources",
+    "text": "Resources\n\nFastAI Lesson 0: How to FastAI\nChristine Mcleavey’s Blog\nQuarto\nBluesky"
+  },
+  {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
@@ -14,73 +91,10 @@
     "text": "This is my first blog post. Welcome!\nI decided to start a blog inspired by Jeremy Howard’s Lecture 0 from the FastAI Course. Jeremy and FastAI used to maintain a blogging and publication tool called FastPages but transitioned to a new publication system called Quarto.\nThis blog is written in Quarto. Why Quarto? In the past I had attempted to used Medium and Substack but never fully spent the time to learn the tools to write a blog post. I decided to learn and publish with Quarto because of its capabilities to produce high quality scientific and technical documents with the ability to embed code and visualizations for review. Another reason why I like Quarto is how easy it is to write markdown and publish a blog.\nGoing forward I hope to use Quarto to write about my programming projects, thoughts,and improve my writing."
   },
   {
-    "objectID": "posts/fastai-lecture0/index.html",
-    "href": "posts/fastai-lecture0/index.html",
-    "title": "FastAI Lesson 0: How to FastAI",
-    "section": "",
-    "text": "I’ve recently started FastAI Practical Deep Learning for Coders to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with Lesson 0. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. Lesson 0 isn’t officially presented in the course until Lesson 3 but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.\nLesson 0 doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the Lesson 0 project. Lesson 0 was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to Discord , Mastodon, and Bluesky. I’d recommend checking out the FastAI Forums, FastAI Discord, and BlueSky."
-  },
-  {
-    "objectID": "posts/fastai-lecture0/index.html#jeremy-howards-advice",
-    "href": "posts/fastai-lecture0/index.html#jeremy-howards-advice",
-    "title": "FastAI Lesson 0: How to FastAI",
-    "section": "Jeremy Howard’s Advice",
-    "text": "Jeremy Howard’s Advice\n\nCommit to finish the course\nTry to finish one really good project to show off what you’ve learned in the course\nShare and blog about your work"
-  },
-  {
-    "objectID": "posts/fastai-lecture0/index.html#how-to-watch-a-fastai-lesson",
-    "href": "posts/fastai-lecture0/index.html#how-to-watch-a-fastai-lesson",
-    "title": "FastAI Lesson 0: How to FastAI",
-    "section": "How to Watch A FastAI Lesson",
-    "text": "How to Watch A FastAI Lesson\nThis advice was presented by Jeremy Howard in Lesson 0\n\nWatch FastAI Lecture\nRun notebooks and code presented in the lecture and experiment with code\nReproduce notebook from a clean notebook (Jeremy provides clean notebooks on github)\nRepeat with a different dataset (could be personal project)"
-  },
-  {
-    "objectID": "posts/fastai-lecture0/index.html#resources",
-    "href": "posts/fastai-lecture0/index.html#resources",
-    "title": "FastAI Lesson 0: How to FastAI",
-    "section": "Resources",
-    "text": "Resources\n\nFastAI Lesson 0: How to FastAI\nChristine Mcleavey’s Blog\nQuarto\nBluesky"
-  },
-  {
-    "objectID": "posts/fastai-lecture1/index.html",
-    "href": "posts/fastai-lecture1/index.html",
-    "title": "FastAI Lesson 1: Getting Started",
-    "section": "",
-    "text": "In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4."
-  },
-  {
-    "objectID": "posts/fastai-lecture1/index.html#summary",
-    "href": "posts/fastai-lecture1/index.html#summary",
-    "title": "FastAI Lesson 1: Getting Started",
-    "section": "",
-    "text": "In this lesson, Jeremy walks through a bird classification example which in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I conceptually found some of the definitions that Jeremy mentioned in the lesson such as model confusing which is where the Chapter 1 of the FastAI Book filled in the gaps. I would strongly recommend checking out the definitions in this chapter because they’re still used today when talking about how a model like GPT-4."
-  },
-  {
-    "objectID": "posts/fastai-lecture1/index.html#terminology",
-    "href": "posts/fastai-lecture1/index.html#terminology",
-    "title": "FastAI Lesson 1: Getting Started",
-    "section": "Terminology",
-    "text": "Terminology\n\nMachine Learning - The training of programs developed by teaching a computer learn from experience rather than coding the individual steps\nDeep Learning - A computer technique that uses layers of neural networks to extract and transform data. Neural networks layers are trained by algorithms that minimize their errors and improve their accuracy. This is how a network learns to perform a specific task. Deep learning is a sub-discipline of machine learning.\nDataset - A bunch of data ie. images, sounds, text, files or anything else.\nLabel - The data we’re trying to predict ie. dog or cat.\nIndependent Variable - Data that does not include labels\nDependent Variable - the correct label ie. dog or cat. Also called targets.\nArchitecture - The structure of the model we’re trying to fit. A mathematical function that we’re passing the input data and parameters to.\nParameters - The values in the model that change what task it can do and are updated through model training. In Arthur Samuel’s definitions the synonym for parameters is weights which has a different meaning in modern deep learning.\nParameter(Weight) Assignment - Particular choice of values for parameters.\nWeights - A particular type of model parameter.\nFit - Update the model parameters such that the predictions of the model using the input data match the target labels.\nTrain - Synoym for fit.\nPretrained Model - A model that has already been trained, generally using a large dataset and will be fine-tuned ie. resnet class of models.\nFine-Tune - Update a pretrained model for a different task.\nEpoch - One complete pass through the input data.\nLoss - A measure of how good the model is, chosen to drive training via Stochastic Gradient Descent (SGD).\nMetric - A measurement of how good the model is, using the validation set, chosen for human consumption.\nValidation Set - A set of data held out from training, used only for measuring how good the model is.\nTraining Set - The data used for fitting the model; does not include any data from the validation set.\nOverfitting - Training a model in such a way that it remembers specific features of the input data rather than generalizing.\nConvolutional Neural Network (CNN) - A type of neural network that works particularly well for computer vision tasks.\nTransfer Learning: Using a pretrained model for a task different to what it was originally trained for."
-  },
-  {
-    "objectID": "posts/fastai-lecture1/index.html#limitations-of-machine-learning",
-    "href": "posts/fastai-lecture1/index.html#limitations-of-machine-learning",
-    "title": "FastAI Lesson 1: Getting Started",
-    "section": "Limitations of Machine Learning",
-    "text": "Limitations of Machine Learning\n\nA model cannot be created without data\nA model can only learn to operate on patterns seen in input data used to train it\nThis learning approach only creates predictions not recommend actions\nWe need labels + data (pictures of dogs and cats that have labels saying which ones are dogs and which ones are cats)"
-  },
-  {
-    "objectID": "posts/fastai-lecture1/index.html#resources",
-    "href": "posts/fastai-lecture1/index.html#resources",
-    "title": "FastAI Lesson 1: Getting Started",
-    "section": "Resources",
-    "text": "Resources\n\nFastAI Lesson 1: Getting Started\nFastAI Chapter 1, Intro\nKaggle\nGoogle Colab"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "FastAI Lesson 1: Getting Started\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 1 Notes\n\n\n\n\n\n\nNov 20, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nFastAI Lesson 0: How to FastAI\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 0 Notes\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\nFirst Blog Post\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\nNo matching items"
+    "text": "FastAI Lesson 1: Getting Started\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 1 Notes\n\n\n\n\n\n\nNov 21, 2023\n\n\n\n\n\n\n  \n\n\n\n\nFastAI Lesson 0: How to FastAI\n\n\n\n\n\n\n\nlearning\n\n\nfastai\n\n\ndeep learning\n\n\n\n\nFastAI Lesson 0 Notes\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\nFirst Blog Post\n\n\n\n\n\n\nNov 19, 2023\n\n\nPranav Rajan\n\n\n\n\n\n\nNo matching items"
   }
 ]
