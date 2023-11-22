@@ -13,7 +13,8 @@
 <lastBuildDate>Tue, 21 Nov 2023 08:00:00 GMT</lastBuildDate>
 <item>
   <title>FastAI Lesson 1: Getting Started</title>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html</link>
+  <dc:creator>Pranav Rajan</dc:creator>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html</link>
   <description><![CDATA[ 
 
 
@@ -197,7 +198,7 @@ font-style: inherit;">256</span>)</span>
   warnings.warn(f"A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}"</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:15:07.714114Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:15:07.713714Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:15:09.048645Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:15:09.047656Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:15:07.714085Z&quot;}" data-execution_count="5">
@@ -234,7 +235,7 @@ font-style: inherit;">256</span>)</span></code></pre></div>
   warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:19:42.776156Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:19:42.775040Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:21:22.118506Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:21:22.117220Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:19:42.776115Z&quot;}" data-execution_count="6">
@@ -427,7 +428,7 @@ font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:29:36.801651Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:29:36.800809Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:29:42.341723Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:29:42.340624Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:29:36.801604Z&quot;}" data-execution_count="18">
@@ -598,8 +599,8 @@ Probability it's a bird: 0.9996</code></pre>
 </div>
 </section>
 </section>
-<section id="picasso-cubist-painting-or-georges-bracques-cubist-painting" class="level2">
-<h2 class="anchored" data-anchor-id="picasso-cubist-painting-or-georges-bracques-cubist-painting">Picasso Cubist Painting or Georges Bracques Cubist Painting</h2>
+<section id="picasso-cubist-painting-or-georges-braque-cubist-painting" class="level2">
+<h2 class="anchored" data-anchor-id="picasso-cubist-painting-or-georges-braque-cubist-painting">Picasso Cubist Painting or Georges Braque Cubist Painting</h2>
 <p>This code was written by me based on Jeremy and FastAI’s bird example. I picked this example because of an interest in art, the similarity between Picasso and Braque’s cubist art, and the question of whether a computer would be able to tell the difference between the two artists when shown a random cubist painting by either Picasso or Braque.</p>
 <section id="step-1-gather-data-1" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-gather-data-1">Step 1: Gather Data</h3>
@@ -665,7 +666,7 @@ font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">256</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="21">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:34:37.957206Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:34:37.956156Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:34:38.684411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:34:38.683411Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:34:37.957157Z&quot;}" data-execution_count="22">
@@ -699,7 +700,7 @@ font-style: inherit;">256</span>)</span></code></pre></div>
 <pre><code>Searching for 'George Braque Cubist Painting'</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="22">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:39:27.385024Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:39:27.384560Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:40:49.816235Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:40:49.814961Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:39:27.384989Z&quot;}" data-execution_count="27">
@@ -888,7 +889,7 @@ font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:43:02.501100Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:43:02.499961Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:43:10.282060Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:43:10.280941Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:43:02.501063Z&quot;}" data-execution_count="30">
@@ -1077,7 +1078,7 @@ Probability it's a picasso: 0.0006</code></pre>
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-bracques-cubist-painting.html</guid>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html</guid>
   <pubDate>Tue, 21 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
