@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mozartfish.github.io/blog/about.html</loc>
-    <lastmod>2023-11-22T18:38:47.030Z</lastmod>
+    <lastmod>2023-11-30T20:10:53.883Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html</loc>
-    <lastmod>2023-11-22T18:38:46.146Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</loc>
-    <lastmod>2023-11-22T18:38:44.950Z</lastmod>
+    <lastmod>2023-11-30T20:10:53.019Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/welcome/index.html</loc>
-    <lastmod>2023-11-22T18:38:45.298Z</lastmod>
+    <lastmod>2023-11-30T20:10:51.207Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</loc>
+    <lastmod>2023-11-30T20:10:50.863Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment.html</loc>
+    <lastmod>2023-11-30T20:10:52.267Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/index.html</loc>
-    <lastmod>2023-11-22T18:38:46.734Z</lastmod>
+    <lastmod>2023-11-30T20:10:53.615Z</lastmod>
   </url>
 </urlset>
