@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/fastai-lesson3/FASTAI_Lesson_3_V3.html",
       "/posts/fastai-lesson2/ModelDeployment.html",
       "/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html",
       "/posts/fastai-lesson0/index.html",
