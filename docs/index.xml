@@ -14,7 +14,7 @@
 <item>
   <title>FastAI Lesson 3: Neural Network Foundations</title>
   <dc:creator>Pranav Rajan</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3.html</link>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3.html</link>
   <description><![CDATA[ 
 
 
@@ -226,7 +226,7 @@ MNIST Training Data Directory Contents: [Path('train/7'), Path('train/3')]
 Test Image of 3 from 3 training data set</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="41">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-3-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-3-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -865,10 +865,10 @@ Number of images in seven tensors: 6265</code></pre>
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-9-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-9-output-3.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-9-output-4.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-9-output-4.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The way I understand tensors is that they are data structures for storing information. The way I understand the stack operation is storing all the images into a pile of images that we then then can average all the pixel values for each pixel index in the image.</p>
@@ -1033,10 +1033,10 @@ mean7 tensor rank: 2</code></pre>
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-11-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-11-output-3.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-11-output-4.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-11-output-4.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -2148,16 +2148,16 @@ Loss Value: 632.94921875
 Loss Value: 632.9440307617188</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-20-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-20-output-2.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-20-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-20-output-3.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-20-output-4.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-20-output-4.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-20-output-5.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-20-output-5.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -4137,7 +4137,7 @@ font-style: inherit;">2</span>))<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">;</span></span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-outputid="fd9f4109-2049-4b32-8885-44f7318974aa" data-execution_count="39">
@@ -4276,13 +4276,13 @@ font-style: inherit;">0.1</span>)</span></code></pre></div>
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson3/FASTAI_Lesson_3_V3.html</guid>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3.html</guid>
   <pubDate>Mon, 18 Dec 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
   <title>FastAI Lesson 2: Production</title>
   <dc:creator>Pranav Rajan</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment.html</link>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2.html</link>
   <description><![CDATA[ 
 
 
@@ -4429,7 +4429,7 @@ font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">256</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-outputid="a8183896-c442-4137-a429-71b716fef8ff" data-execution_count="5">
@@ -4467,7 +4467,7 @@ font-style: inherit;">256</span>)</span></code></pre></div>
   warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-outputid="ad422104-34f2-4d49-a4e2-0b5036eac642" data-execution_count="6">
@@ -4656,7 +4656,7 @@ font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-outputid="3337aab5-1727-4520-d4b6-9863c25d2359" data-execution_count="9">
@@ -5051,13 +5051,13 @@ font-style: inherit;"># iface.launch()</span></span></code></pre></div>
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson2/ModelDeployment.html</guid>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2.html</guid>
   <pubDate>Thu, 30 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
   <title>FastAI Lesson 1: Getting Started</title>
   <dc:creator>Pranav Rajan</dc:creator>
-  <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html</link>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1.html</link>
   <description><![CDATA[ 
 
 
@@ -5241,7 +5241,7 @@ font-style: inherit;">256</span>)</span>
   warnings.warn(f"A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}"</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:15:07.714114Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:15:07.713714Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:15:09.048645Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:15:09.047656Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:15:07.714085Z&quot;}" data-execution_count="5">
@@ -5278,7 +5278,7 @@ font-style: inherit;">256</span>)</span></code></pre></div>
   warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:19:42.776156Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:19:42.775040Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:21:22.118506Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:21:22.117220Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:19:42.776115Z&quot;}" data-execution_count="6">
@@ -5471,7 +5471,7 @@ font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:29:36.801651Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:29:36.800809Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:29:42.341723Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:29:42.340624Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:29:36.801604Z&quot;}" data-execution_count="18">
@@ -5709,7 +5709,7 @@ font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">256</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="21">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:34:37.957206Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:34:37.956156Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:34:38.684411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:34:38.683411Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:34:37.957157Z&quot;}" data-execution_count="22">
@@ -5743,7 +5743,7 @@ font-style: inherit;">256</span>)</span></code></pre></div>
 <pre><code>Searching for 'George Braque Cubist Painting'</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="22">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:39:27.385024Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:39:27.384560Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:40:49.816235Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:40:49.814961Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:39:27.384989Z&quot;}" data-execution_count="27">
@@ -5932,7 +5932,7 @@ font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-11-22T07:43:02.501100Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-11-22T07:43:02.499961Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-11-22T07:43:10.282060Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-11-22T07:43:10.280941Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-11-22T07:43:02.501063Z&quot;}" data-execution_count="30">
@@ -6121,7 +6121,7 @@ Probability it's a picasso: 0.0006</code></pre>
   <category>learning</category>
   <category>fastai</category>
   <category>deep learning</category>
-  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson1/picasso-or-braque-cubist-painting.html</guid>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1.html</guid>
   <pubDate>Tue, 21 Nov 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
