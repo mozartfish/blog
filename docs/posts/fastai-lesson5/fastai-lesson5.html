@@ -203,14 +203,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#linear-model" id="toc-linear-model" class="nav-link" data-scroll-target="#linear-model">Linear Model</a>
   <ul class="collapse">
   <li><a href="#linear-model-variables" id="toc-linear-model-variables" class="nav-link" data-scroll-target="#linear-model-variables">Linear Model Variables</a></li>
-  </ul></li>
   <li><a href="#gradient-descent" id="toc-gradient-descent" class="nav-link" data-scroll-target="#gradient-descent">Gradient Descent</a></li>
   <li><a href="#linear-model-training" id="toc-linear-model-training" class="nav-link" data-scroll-target="#linear-model-training">Linear Model Training</a></li>
   <li><a href="#sigmoid" id="toc-sigmoid" class="nav-link" data-scroll-target="#sigmoid">Sigmoid</a></li>
   <li><a href="#final-linear-model-setup" id="toc-final-linear-model-setup" class="nav-link" data-scroll-target="#final-linear-model-setup">Final Linear Model Setup</a></li>
-  <li><a href="#test-model-on-inference-data" id="toc-test-model-on-inference-data" class="nav-link" data-scroll-target="#test-model-on-inference-data">Test model on inference data</a>
-  <ul class="collapse">
-  <li><a href="#inference-data-processing" id="toc-inference-data-processing" class="nav-link" data-scroll-target="#inference-data-processing">Inference Data Processing</a></li>
+  <li><a href="#test-model-on-inference-data" id="toc-test-model-on-inference-data" class="nav-link" data-scroll-target="#test-model-on-inference-data">Test model on inference data</a></li>
   <li><a href="#linear-model-submit-results-to-kaggle" id="toc-linear-model-submit-results-to-kaggle" class="nav-link" data-scroll-target="#linear-model-submit-results-to-kaggle">Linear Model: Submit Results to Kaggle</a></li>
   </ul></li>
   <li><a href="#cleaning-up-linear-model-code" id="toc-cleaning-up-linear-model-code" class="nav-link" data-scroll-target="#cleaning-up-linear-model-code">Cleaning up Linear Model Code</a>
@@ -1950,9 +1947,8 @@ vals rank: 1</code></pre>
 <span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> torch.<span class="bu">abs</span>(calc_preds(coeffs, indeps) <span class="op">-</span> deps).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="gradient-descent" class="level2">
-<h2 class="anchored" data-anchor-id="gradient-descent">Gradient Descent</h2>
+<section id="gradient-descent" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-descent">Gradient Descent</h3>
 <div class="cell" data-outputid="c014db5e-c53e-431e-e571-8c138c162362" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tell pytorch to calculate gradients</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>coeffs.requires_grad_()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2001,8 +1997,8 @@ vals rank: 1</code></pre>
 </div>
 </div>
 </section>
-<section id="linear-model-training" class="level2">
-<h2 class="anchored" data-anchor-id="linear-model-training">Linear Model Training</h2>
+<section id="linear-model-training" class="level3">
+<h3 class="anchored" data-anchor-id="linear-model-training">Linear Model Training</h3>
 <div class="cell" data-outputid="233b9476-92a4-440b-db8c-ffd818ec727c" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data split</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.data.transforms <span class="im">import</span> RandomSplitter</span>
@@ -2112,8 +2108,8 @@ Average Accuracy: 0.7865168452262878</code></pre>
 </div>
 </div>
 </section>
-<section id="sigmoid" class="level2">
-<h2 class="anchored" data-anchor-id="sigmoid">Sigmoid</h2>
+<section id="sigmoid" class="level3">
+<h3 class="anchored" data-anchor-id="sigmoid">Sigmoid</h3>
 <div class="cell" data-outputid="4fbaa3de-79a1-4532-81ef-44f44ff30594" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># - some of the predictions of the survival probability are &gt; 1 or &lt; 0</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># - can fix this issue by passing prediction through sigmoid function</span></span>
@@ -2169,8 +2165,8 @@ Average Accuracy: 0.7865168452262878</code></pre>
 </div>
 </div>
 </section>
-<section id="final-linear-model-setup" class="level2">
-<h2 class="anchored" data-anchor-id="final-linear-model-setup">Final Linear Model Setup</h2>
+<section id="final-linear-model-setup" class="level3">
+<h3 class="anchored" data-anchor-id="final-linear-model-setup">Final Linear Model Setup</h3>
 <div class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of coefficients</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>n_coeff <span class="op">=</span> t_indep.shape[<span class="dv">1</span>]</span>
@@ -2224,10 +2220,10 @@ Average Accuracy: 0.7865168452262878</code></pre>
 </div>
 </div>
 </section>
-<section id="test-model-on-inference-data" class="level2">
-<h2 class="anchored" data-anchor-id="test-model-on-inference-data">Test model on inference data</h2>
-<section id="inference-data-processing" class="level3">
-<h3 class="anchored" data-anchor-id="inference-data-processing">Inference Data Processing</h3>
+<section id="test-model-on-inference-data" class="level3">
+<h3 class="anchored" data-anchor-id="test-model-on-inference-data">Test model on inference data</h3>
+<section id="inference-data-processing" class="level4">
+<h4 class="anchored" data-anchor-id="inference-data-processing">Inference Data Processing</h4>
 <div class="cell" data-outputid="c77ca5ab-8c68-4a70-e861-23021987e23d" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>tst_df <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'test.csv'</span>)</span>
@@ -2693,6 +2689,7 @@ Average Accuracy: 0.7865168452262878</code></pre>
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate predictions of which passengers survived in titanic dataset</span></span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>tst_df[<span class="st">'Survived'</span>] <span class="op">=</span> (calc_preds(tst_indep, coeffs) <span class="op">&gt;</span> <span class="fl">0.5</span>).<span class="bu">int</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 </section>
 <section id="linear-model-submit-results-to-kaggle" class="level3">
 <h3 class="anchored" data-anchor-id="linear-model-submit-results-to-kaggle">Linear Model: Submit Results to Kaggle</h3>
