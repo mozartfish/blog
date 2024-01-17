@@ -7,9 +7,9 @@ categories: [learning, fastai, deep learning]
 toc: true
 ---
 
-I've recently started [FastAI Practical Deep Learning for Coders](https://course.fast.ai/) to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with `Lesson 0`. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I've learned for people new to machine learning like me. `Lesson 0` isn't officially presented in the course until `Lesson 3` but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.
+I've recently started [FastAI Practical Deep Learning for Coders](https://course.fast.ai/) to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with `Lesson 0`. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I've learned for people new to machine learning like me. [Lesson 0](https://www.youtube.com/watch?v=gGxe2mN3kAg) isn't officially presented in the course until [Lesson 3](https://course.fast.ai/Lessons/lesson3.html) but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.
 
-`Lesson 0` doesn't have any code examples or notebooks but I took Jeremy's advice about blogging and interacting with the community by setting up this Quarto blog as the `Lesson 0` project. `Lesson 0` was created in 2020 before Twitter became X and closed off to people who didn't have an account. Since then, some of the ML community and other academic communities in CS have migrated to `Discord` , `Mastodon`, and `Bluesky`. I'd recommend checking out the `FastAI Forums`, `FastAI Discord`, and `BlueSky`.
+Lesson 0 doesn't have any code examples or notebooks but I took Jeremy's advice about blogging and interacting with the community by setting up this Quarto blog as the Lesson 0 project. Lesson 0 was created in 2020 *before* **Twitter** became **X** and closed off to people who didn't have an account. Since then, some of the ML community and other academic communities in CS have migrated to `Discord` , `Mastodon`, and `Bluesky`. I'd recommend checking out the `FastAI Forums`, `FastAI Discord`, and `BlueSky`.
 
 ## Jeremy Howard's Advice
 
@@ -38,3 +38,5 @@ This advice was presented by Jeremy Howard in `Lesson 0`
 3.  [Quarto](https://quarto.org/)
 
 4.  [Bluesky ](https://bsky.app/)
+
+5. [fast.ai Forum](https://forums.fast.ai/)

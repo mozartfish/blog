@@ -17084,8 +17084,8 @@ Probability it's a picasso: 0.0006</code></pre>
 
 
 
-<p>I’ve recently started <a href="https://course.fast.ai/">FastAI Practical Deep Learning for Coders</a> to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with <code>Lesson 0</code>. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. <code>Lesson 0</code> isn’t officially presented in the course until <code>Lesson 3</code> but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.</p>
-<p><code>Lesson 0</code> doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the <code>Lesson 0</code> project. <code>Lesson 0</code> was created in 2020 before Twitter became X and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to <code>Discord</code> , <code>Mastodon</code>, and <code>Bluesky</code>. I’d recommend checking out the <code>FastAI Forums</code>, <code>FastAI Discord</code>, and <code>BlueSky</code>.</p>
+<p>I’ve recently started <a href="https://course.fast.ai/">FastAI Practical Deep Learning for Coders</a> to learn about machine learning. To hold myself accountable and finish the course I am going to try to write a blog post for every video in the series starting with <code>Lesson 0</code>. By doing this my goal is to not only learn about deep learning and track my progress but reinforce my learning by trying to explain what I’ve learned for people new to machine learning like me. <a href="https://www.youtube.com/watch?v=gGxe2mN3kAg">Lesson 0</a> isn’t officially presented in the course until <a href="https://course.fast.ai/Lessons/lesson3.html">Lesson 3</a> but it provides valuable advice for how to complete FastAI and actually learn how to write deep learning code.</p>
+<p>Lesson 0 doesn’t have any code examples or notebooks but I took Jeremy’s advice about blogging and interacting with the community by setting up this Quarto blog as the Lesson 0 project. Lesson 0 was created in 2020 <em>before</em> <strong>Twitter</strong> became <strong>X</strong> and closed off to people who didn’t have an account. Since then, some of the ML community and other academic communities in CS have migrated to <code>Discord</code> , <code>Mastodon</code>, and <code>Bluesky</code>. I’d recommend checking out the <code>FastAI Forums</code>, <code>FastAI Discord</code>, and <code>BlueSky</code>.</p>
 <section id="jeremy-howards-advice" class="level2">
 <h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
 <ol type="1">
@@ -17111,6 +17111,7 @@ Probability it's a picasso: 0.0006</code></pre>
 <li><p><a href="https://christinemcleavey.com/learning-about-deep-learning/">Christine Mcleavey’s Blog</a></p></li>
 <li><p><a href="https://quarto.org/">Quarto</a></p></li>
 <li><p><a href="https://bsky.app/">Bluesky</a></p></li>
+<li><p><a href="https://forums.fast.ai/">fast.ai Forum</a></p></li>
 </ol>
 
 
