@@ -191,6 +191,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#announcments" id="toc-announcments" class="nav-link active" data-scroll-target="#announcments">Announcments</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#my-thoughts" id="toc-my-thoughts" class="nav-link" data-scroll-target="#my-thoughts">My Thoughts</a></li>
+  <li><a href="#jeremy-howards-advice" id="toc-jeremy-howards-advice" class="nav-link" data-scroll-target="#jeremy-howards-advice">Jeremy Howard’s Advice</a></li>
   <li><a href="#terminology" id="toc-terminology" class="nav-link" data-scroll-target="#terminology">Terminology</a></li>
   <li><a href="#picasso-or-matisse-model" id="toc-picasso-or-matisse-model" class="nav-link" data-scroll-target="#picasso-or-matisse-model">Picasso or Matisse Model</a>
   <ul class="collapse">
@@ -199,7 +201,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#step-3-test-model" id="toc-step-3-test-model" class="nav-link" data-scroll-target="#step-3-test-model">Step 3: Test Model</a></li>
   <li><a href="#step-4-save-and-export-model" id="toc-step-4-save-and-export-model" class="nav-link" data-scroll-target="#step-4-save-and-export-model">Step 4: Save and Export Model</a></li>
   </ul></li>
-  <li><a href="#jeremy-howards-advice" id="toc-jeremy-howards-advice" class="nav-link" data-scroll-target="#jeremy-howards-advice">Jeremy Howard’s Advice</a></li>
   <li><a href="#gradio-hugging-face-spaces" id="toc-gradio-hugging-face-spaces" class="nav-link" data-scroll-target="#gradio-hugging-face-spaces">Gradio + Hugging Face Spaces</a></li>
   <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a></li>
   </ul>
@@ -213,14 +214,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="announcments" class="level2">
 <h2 class="anchored" data-anchor-id="announcments">Announcments</h2>
-<p>Finally back! Had some deadlines and issues with gradio, kaggle, Firefox gtk rendering, quarto and jupyter but everything is working now. I’d like to give a shoutout to Kevin Liu for his help in getting up to speed with the updated gradio API. The example provided by Dr.&nbsp;Tanishq Abraham isn’t compatible with the updated version of Gradio so with Kevin’s notes on the gradio errors he ran into, I managed to get a model up on hugging face spaces with the new gradio syntax.</p>
+<p>Finally back! Had some deadlines followed by issues with gradio, kaggle, Firefox gtk, quarto and jupyter but now everything is working for me to publish this post. I’d like to give a shoutout to Kevin Liu for his help in getting up to speed with the updated gradio API. Kevin reviewed my gradio example and took some helpful notes about the errors he ran into which helped me debug the differences between the current version of gradio and that used in Tanishq’s example.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy walks through a bear classification model example and then spends most of the lesson focusing on how to deploy a model into production. By production, Jeremy is referring to using a model outside of a Jupyter notebook. This is very useful because it provides a way for designing a custom inviting interface for interacting with a trained model. The decision of what the user interface should look like comes down to project scope, goals and the people using the model.</p>
-<p>If you’re a programmer, designer or learning deep learning like me, then it might be fun to hack around with javascript + the web to build a really nice interface. This can be a project in its own. The other group of people are data scientists, boss, team or people who need to interact with a prototype model ASAP. In that case, there are many handy python libraries and tools such as <a href="https://colab.research.google.com/">colab</a>, <a href="https://altair-viz.github.io/">altair</a>, <a href="https://www.gradio.app/">gradio</a> and <a href="https://streamlit.io/">streamlit</a> which provide a set of components that have been determined to be highly effective for rapid prototyping and sharing work on the web.</p>
-<p>If you are looking to build a nice application I would maybe start with gradio or streamlit for prototyping but then work with a designer or web developer to build a nicer interface since I’ve learned from personal experience that python libraries that render javascript, html and css can be a debugging nightmare when creating interactive web user interfaces.</p>
-<p>Using gradio reminded me a lot of using streamlit. I remember liking streamlit for its simplicity in creating components but its simplicity was also its curse because of the nightmare it created when a user wanted to customize components beyond what the library offered. I really liked the gradio version that was used by Tanishq in his example because the syntax was very explicit about what the arguments and parameters mean in a gradio function. What tripped me up in the new gradio syntax was how complicated it was to debug and set up components. Once I managed to grasp the pattern and syntax from the gradio documentation it was a smoother experience but if I was new to python it would have been very difficult. I try to avoid using streamlit when I can and I probably will do the same with gradio but the experience setting it up and deploying a model on hugging face spaces with a web interface was worth learning. I might come back to this lesson in the future once I finish the rest of the course to experiment with how to deploy a model.</p>
+<p>In this lesson, Jeremy walks through a bear classification model example and then spends most of the lesson focusing on how to deploy a model into production. The production example in this lesson works well for personal project but is different from what the process is in industry. I thought it was a useful lesson for how to quickly get a model and simple web interface up and running.</p>
+</section>
+<section id="my-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts">My Thoughts</h2>
+<p>Although Jeremy didn’t directly address this in the lecture video, designing user interfaces for data science tasks is difficult (this is based on my personal experience) because there are many different requirements to satisfy. If your audience is a <strong>boss, manager, team, data scientists</strong>, they probably want to interact with a model ASAP. To save development time and get a basic application working tools like <a href="https://www.gradio.app/">gradio</a>, <a href="https://streamlit.io/">streamlit</a>, <a href="https://altair-viz.github.io/">altair</a> and <a href="https://colab.research.google.com/">colab</a> do a great job but trade <strong>performance, user experience and features</strong> for iteration speed and immediate results. Another audience is <strong>enthusiasts and expert users</strong> who want a core set of features that address <strong>performance, utility, interaction, and end user experience</strong> who may be willing to trade development time for a well crafted interactive data experience. For these needs, tools like <a href="https://d3js.org/">D3</a>, <a href="https://svelte.dev/">Svelte</a>, <a href="https://vuejs.org/">Vue</a>, <a href="https://react.dev/">React</a> will give greater control and freedom for creative expression and delivery but require significant development time and testing.</p>
+<p>I would probably start off with gradio or streamlit for prototyping and then gradually work with a designer/web developer to build a scalable performant web interface to interact with the model. Through personal experience, I’ve learned that debugging python code that renders javascript, html and css for the web can be a nightmare especially when working with 1,000+ datapoints for interactive web data interfaces.</p>
+<p>Gradio reminded me a lot of streamlit. I liked streamlit for its simplicity in creating components but the downside was that its simplicity offered few opportunities for cusomizing components beyond what streamlit offered. The syntax for both streamlit and gradio were difficult for me to follow initially because during debugging I sometimes ran into web rendering bugs that were caused by the way I used a function from the streamlit/gradio library. Through trial and error I figured out what works but the process took a long time because I couldn’t come up with an effective development process.</p>
+<p>I try to avoid using streamlit and gradio whenever I can but the process of learning how to set up gradio and deploying a model + interface on hugging face space was definitely worth it. I might come back to this lesson in the future once I finish the rest of the course to experiment with how to build an interface for a model.</p>
+</section>
+<section id="jeremy-howards-advice" class="level2">
+<h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
+<ul>
+<li>Train a model before data cleaning because it helps find data issues more quickly and easily.</li>
+</ul>
 </section>
 <section id="terminology" class="level2">
 <h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
@@ -521,16 +532,10 @@ Probability it's a matisse: 0.9936</code></pre>
 </div>
 </section>
 </section>
-<section id="jeremy-howards-advice" class="level2">
-<h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
-<ul>
-<li>Train a model before data cleaning because it helps find data issues more quickly and easily.</li>
-</ul>
-</section>
 <section id="gradio-hugging-face-spaces" class="level2">
 <h2 class="anchored" data-anchor-id="gradio-hugging-face-spaces">Gradio + Hugging Face Spaces</h2>
-<p>The following code was originally written by Dr.&nbsp;Tanishq Abraham and published in the blog post: <a href="https://www.tanishq.ai/blog/posts/2021-11-16-gradio-huggingface.html">Gradio + Hugging Face Spaces: A Tutorial</a>. It was modified by me and Kevin Liu to work with the current version of the gradio api. Currently the code works on Hugging Face Spaces but may break in the future as gradio continues updating its api.</p>
-<p>My recommendation to get gradio and Hugging Face Spaces working is to start off with Tanishq’s article and consult the gradio documentation to figure out the differences between the current version of the api and the version used in the article. I tried getting the pet classifier example working first before moving on to applying gradio to my Picasso Matisse Model which saved a lot of headache trying to figure out how git LFS and Hugging Face Spaces worked with my example.</p>
+<p>The following code was originally written by Dr.&nbsp;Tanishq Abraham and published in the blog post: <a href="https://www.tanishq.ai/blog/posts/2021-11-16-gradio-huggingface.html">Gradio + Hugging Face Spaces: A Tutorial</a>. It was modified by me and Kevin Liu to work with the current version of the gradio api. Currently the code works on Hugging Face Spaces but may break in the future as gradio continues updating its API.</p>
+<p>My recommendation to get gradio and Hugging Face Spaces working is to start off with Tanishq’s article and consult the gradio documentation to figure out the differences between the current version of the API and the version used in the article. I tried getting the pet classifier example working first before moving on to applying gradio to my Picasso Matisse Model which saved a lot of headache trying to figure out how git LFS and Hugging Face Spaces worked with my example.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gradio <span class="im">as</span> gr</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
@@ -572,8 +577,8 @@ Probability it's a matisse: 0.9936</code></pre>
 <li><a href="https://www.tanishq.ai/blog/posts/2021-11-16-gradio-huggingface.html">Gradio + Hugging Face Spaces: A Tutorial</a></li>
 <li><a href="https://www.youtube.com/watch?v=8X4u9sca3Io">How to Set Up an SSH Key(GitHub, Hugging Face Spaces)</a></li>
 <li><a href="https://huggingface.co/spaces">Hugging Face Spaces</a></li>
-<li><a href="https://www.gradio.app/">Gradio</a></li>
 <li><a href="https://www.gradio.app/docs/interface">Gradio docs</a></li>
+<li><a href="https://youtube.com/playlist?list=PLfYUBJiXbdtSLBPJ1GMx-sQWf6iNhb8mM&amp;si=WwPOjgYofy4M9QUW">Jeremy Howard FastAI Live Coding</a></li>
 <li><a href="https://docs.fast.ai/">fastai docs</a></li>
 </ol>
 
