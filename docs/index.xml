@@ -283,12 +283,33 @@ font-style: inherit;">'ignore'</span>)</span>
 </section>
 <section id="problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="problem-statement">Problem Statement</h2>
-<p><code>Problem</code>: what sorts of people were more likely to survive the Titanic Disaster - use machine learning to create a model that predicts which passengers survived the Titanic Shipwreck using passenger data(name, age, gender, socio-economic class, etc)</p>
-<p><code>Training Data</code> - contains subset of the passengers on board Titanic (891 passengers) with information on whether they survived or not(ground truth)</p>
-<p><code>Test(Inference) Data</code> - contains same information as train data but does disclose the ground truth (whether passenger survived or not) - using patterns found in train data, predict whether the other 418 passsengers on board (test data) survived</p>
-<p><code>Evaluation Goal</code> - Predict if a passenger survived the sinking of the titanic or not - For each value in test set, predict 0 or 1 value for the variable</p>
-<p><code>Evaluation Metric</code> - Score is the percentage of passenger correctly predicted (accuracy)</p>
-<p><code>Submission Format</code> - PassengerID, Survived (contains binary predictions: 1 for survived, 0 for deceased)</p>
+<p><code>Problem</code></p>
+<p>what sorts of people were more likely to survive the Titanic Disaster</p>
+<ul>
+<li>use machine learning to create a model that predicts which passengers survived the Titanic Shipwreck using passenger data(name, age, gender, socio-economic class, etc)</li>
+</ul>
+<p><code>Training Data</code></p>
+<ul>
+<li>contains subset of the passengers on board Titanic (891 passengers) with information on whether they survived or not(ground truth)</li>
+</ul>
+<p><code>Test(Inference) Data</code></p>
+<ul>
+<li>contains same information as train data but does disclose the ground truth (whether passenger survived or not)</li>
+<li>using patterns found in train data, predict whether the other 418 passsengers on board (test data) survived</li>
+</ul>
+<p><code>Evaluation Goal</code></p>
+<ul>
+<li>Predict if a passenger survived the sinking of the titanic or not</li>
+<li>For each value in test set, predict 0 or 1 value for the variable</li>
+</ul>
+<p><code>Evaluation Metric</code></p>
+<ul>
+<li>Score is the percentage of passenger correctly predicted (accuracy)</li>
+</ul>
+<p><code>Submission Format</code></p>
+<ul>
+<li>PassengerID, Survived (contains binary predictions: 1 for survived, 0 for deceased)</li>
+</ul>
 </section>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
@@ -5502,13 +5523,27 @@ font-style: inherit;">!</span>ls {path}</span></code></pre></div>
 </section>
 <section id="problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="problem-statement">Problem Statement</h2>
-<p><code>Problem</code>: given a pairs of phrases (an <code>anchor</code> or <code>target</code> phrase), rate how similar they are on a scale of <code>0</code>(not similar) to <code>1</code>(identical in meaning). Similarity has been scored within a patent’s <code>context</code> specifically the <code>CPC Classification</code> which indicates the subject to which the patent relates.</p>
-<p><code>Training Data</code> - contains phrases, contexts and similarity scores</p>
-<p><code>Test(Inference) Data</code> - unseen test contains approximately <code>12k</code> pairs of phrases. Small public test set has been provided for testing purposes <strong>but is not use in scoring</strong>. - contains identitical structure to <code>training data</code> <strong>but without the score</strong></p>
-<p><code>Evaluation Goal</code> - Build model to match phrases in order to extract contextual information helping the patent community connect the dots between millions of patent documents</p>
-<p><code>Evaluation Metric</code> - Submissions are evaluated on the <code>Pearson Correlation Coefficient</code> between <strong>predicted</strong> and <strong>actual</strong> similarity scores.</p>
-<p><code>Submission Format</code> - id(representing a pair of phrases) in test set, score representing the similarity score</p>
+<p><code>Problem</code> given a pairs of phrases (an <code>anchor</code> or <code>target</code> phrase), rate how similar they are on a scale of <code>0</code>(not similar) to <code>1</code>(identical in meaning). Similarity has been scored within a patent’s <code>context</code> specifically the <code>CPC Classification</code> which indicates the subject to which the patent relates.</p>
+<p><code>Training Data</code></p>
 <ul>
+<li>contains phrases, contexts and similarity scores</li>
+</ul>
+<p><code>Test(Inference) Data</code></p>
+<ul>
+<li><p>unseen test contains approximately <code>12k</code> pairs of phrases. Small public test set has been provided for testing purposes <strong>but is not use in scoring</strong>.</p></li>
+<li><p>contains identitical structure to <code>training data</code> <strong>but without the score</strong></p></li>
+</ul>
+<p><code>Evaluation Goal</code></p>
+<ul>
+<li>Build model to match phrases in order to extract contextual information helping the patent community connect the dots between millions of patent documents</li>
+</ul>
+<p><code>Evaluation Metric</code></p>
+<ul>
+<li>Submissions are evaluated on the <code>Pearson Correlation Coefficient</code> between <strong>predicted</strong> and <strong>actual</strong> similarity scores.</li>
+</ul>
+<p><code>Submission Format</code></p>
+<ul>
+<li><p>id(representing a pair of phrases) in test set, score representing the similarity score</p></li>
 <li><p>A score of 1 is considered that the two inputs have identical meaning</p></li>
 <li><p>A score of 0 is considered that the two inputs have totally different meaning</p></li>
 <li><p>A score in between ie. 0.5 means they’re somewhat similar but not identical</p></li>

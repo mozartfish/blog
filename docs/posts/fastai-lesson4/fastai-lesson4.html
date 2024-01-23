@@ -424,13 +424,27 @@ Successfully installed accelerate-0.26.1</code></pre>
 </section>
 <section id="problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="problem-statement">Problem Statement</h2>
-<p><code>Problem</code>: given a pairs of phrases (an <code>anchor</code> or <code>target</code> phrase), rate how similar they are on a scale of <code>0</code>(not similar) to <code>1</code>(identical in meaning). Similarity has been scored within a patent’s <code>context</code> specifically the <code>CPC Classification</code> which indicates the subject to which the patent relates.</p>
-<p><code>Training Data</code> - contains phrases, contexts and similarity scores</p>
-<p><code>Test(Inference) Data</code> - unseen test contains approximately <code>12k</code> pairs of phrases. Small public test set has been provided for testing purposes <strong>but is not use in scoring</strong>. - contains identitical structure to <code>training data</code> <strong>but without the score</strong></p>
-<p><code>Evaluation Goal</code> - Build model to match phrases in order to extract contextual information helping the patent community connect the dots between millions of patent documents</p>
-<p><code>Evaluation Metric</code> - Submissions are evaluated on the <code>Pearson Correlation Coefficient</code> between <strong>predicted</strong> and <strong>actual</strong> similarity scores.</p>
-<p><code>Submission Format</code> - id(representing a pair of phrases) in test set, score representing the similarity score</p>
+<p><code>Problem</code> given a pairs of phrases (an <code>anchor</code> or <code>target</code> phrase), rate how similar they are on a scale of <code>0</code>(not similar) to <code>1</code>(identical in meaning). Similarity has been scored within a patent’s <code>context</code> specifically the <code>CPC Classification</code> which indicates the subject to which the patent relates.</p>
+<p><code>Training Data</code></p>
 <ul>
+<li>contains phrases, contexts and similarity scores</li>
+</ul>
+<p><code>Test(Inference) Data</code></p>
+<ul>
+<li><p>unseen test contains approximately <code>12k</code> pairs of phrases. Small public test set has been provided for testing purposes <strong>but is not use in scoring</strong>.</p></li>
+<li><p>contains identitical structure to <code>training data</code> <strong>but without the score</strong></p></li>
+</ul>
+<p><code>Evaluation Goal</code></p>
+<ul>
+<li>Build model to match phrases in order to extract contextual information helping the patent community connect the dots between millions of patent documents</li>
+</ul>
+<p><code>Evaluation Metric</code></p>
+<ul>
+<li>Submissions are evaluated on the <code>Pearson Correlation Coefficient</code> between <strong>predicted</strong> and <strong>actual</strong> similarity scores.</li>
+</ul>
+<p><code>Submission Format</code></p>
+<ul>
+<li><p>id(representing a pair of phrases) in test set, score representing the similarity score</p></li>
 <li><p>A score of 1 is considered that the two inputs have identical meaning</p></li>
 <li><p>A score of 0 is considered that the two inputs have totally different meaning</p></li>
 <li><p>A score in between ie. 0.5 means they’re somewhat similar but not identical</p></li>
