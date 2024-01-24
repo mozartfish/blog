@@ -487,14 +487,21 @@
     "href": "posts/fastai-lesson6/fastai-lesson6.html",
     "title": "FastAI Lesson 6: Random Forests",
     "section": "",
-    "text": "In this lesson, Jeremy explains Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts discussing his process and iteration of how he developed his solutions for the Paddy Doctor: Paddy Disease Classification challenge."
+    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
+  },
+  {
+    "objectID": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
+    "href": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
+    "title": "FastAI Lesson 6: Random Forests",
+    "section": "",
+    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
   },
   {
     "objectID": "posts/fastai-lesson6/fastai-lesson6.html#summary",
     "href": "posts/fastai-lesson6/fastai-lesson6.html#summary",
     "title": "FastAI Lesson 6: Random Forests",
-    "section": "",
-    "text": "In this lesson, Jeremy explains Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts discussing his process and iteration of how he developed his solutions for the Paddy Doctor: Paddy Disease Classification challenge."
+    "section": "Summary",
+    "text": "Summary\nIn this lesson, Jeremy explains Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts discussing his process and iteration of how he developed his solutions for the Paddy Doctor: Paddy Disease Classification challenge."
   },
   {
     "objectID": "posts/fastai-lesson6/fastai-lesson6.html#jeremy-howards-advice",
@@ -502,13 +509,6 @@
     "title": "FastAI Lesson 6: Random Forests",
     "section": "Jeremy Howard’s Advice",
     "text": "Jeremy Howard’s Advice\n\nIn datasets with many columns, creating a feature importance plot early is helpful in finding which columns are worth studying more closely\nComplex models are not always better\nSimple models will have trouble providing adequate accuracy for more complex tasks such as recommendation systems, NLP, computer vision, or multivariate time series\nRandom forests are not sensitive to issues like normalization, interactions, non-linear transformations which make them easy to work with and hard to mess up"
-  },
-  {
-    "objectID": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
-    "href": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
-    "title": "FastAI Lesson 6: Random Forests",
-    "section": "Acknowledgements",
-    "text": "Acknowledgements\nAll of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
   },
   {
     "objectID": "posts/fastai-lesson6/fastai-lesson6.html#load-data-and-libraries",
