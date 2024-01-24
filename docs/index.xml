@@ -10,7 +10,3530 @@
 <atom:link href="https://mozartfish.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>This is a blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Wed, 17 Jan 2024 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 23 Jan 2024 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>FastAI Lesson 6: Random Forests</title>
+  <dc:creator>Pranav Rajan</dc:creator>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this lesson, Jeremy explains Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts discussing his process and iteration of how he developed his solutions for the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor: Paddy Disease Classification</a> challenge.</p>
+</section>
+<section id="jeremy-howards-advice" class="level2">
+<h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
+<ul>
+<li>In datasets with many columns, creating a feature importance plot early is helpful in finding which columns are worth studying more closely</li>
+<li>Complex models are not always better</li>
+<li>Simple models will have trouble providing adequate accuracy for more complex tasks such as recommendation systems, NLP, computer vision, or multivariate time series</li>
+<li>Random forests are not sensitive to issues like normalization, interactions, non-linear transformations which make them easy to work with and hard to mess up</li>
+</ul>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/how-random-forests-really-work/">How random forests really work</a>, <a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">First Steps: Road to the Top, Part 1</a> and <a href="https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/">Small models: Road to the Top, Part 2</a>.</p>
+</section>
+<section id="load-data-and-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-data-and-libraries">Load Data and Libraries</h2>
+<div class="cell" data-outputid="49fe0e10-dbd2-4cc4-8377-fbbb5edc6c09" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># import libraries and files</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># required libraries + packages for any ml/data science project</span></span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-6"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb1-7"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fastai library contains all the packages above and wraps them in the fastai library</span></span>
+<span id="cb1-10"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Uqq fastai</span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># kaggle API package install</span></span>
+<span id="cb1-13"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>pip install kaggle</span>
+<span id="cb1-14"></span>
+<span id="cb1-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install TIMM</span></span>
+<span id="cb1-16"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>pip install timm</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Requirement already satisfied: kaggle in /usr/local/lib/python3.10/dist-packages (1.5.16)
+Requirement already satisfied: six&gt;=1.10 in /usr/local/lib/python3.10/dist-packages (from kaggle) (1.16.0)
+Requirement already satisfied: certifi in /usr/local/lib/python3.10/dist-packages (from kaggle) (2023.11.17)
+Requirement already satisfied: python-dateutil in /usr/local/lib/python3.10/dist-packages (from kaggle) (2.8.2)
+Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from kaggle) (2.31.0)
+Requirement already satisfied: tqdm in /usr/local/lib/python3.10/dist-packages (from kaggle) (4.66.1)
+Requirement already satisfied: python-slugify in /usr/local/lib/python3.10/dist-packages (from kaggle) (8.0.1)
+Requirement already satisfied: urllib3 in /usr/local/lib/python3.10/dist-packages (from kaggle) (2.0.7)
+Requirement already satisfied: bleach in /usr/local/lib/python3.10/dist-packages (from kaggle) (6.1.0)
+Requirement already satisfied: webencodings in /usr/local/lib/python3.10/dist-packages (from bleach-&gt;kaggle) (0.5.1)
+Requirement already satisfied: text-unidecode&gt;=1.3 in /usr/local/lib/python3.10/dist-packages (from python-slugify-&gt;kaggle) (1.3)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;kaggle) (3.3.2)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;kaggle) (3.6)
+Collecting timm
+  Downloading timm-0.9.12-py3-none-any.whl (2.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 10.5 MB/s eta 0:00:00
+Requirement already satisfied: torch&gt;=1.7 in /usr/local/lib/python3.10/dist-packages (from timm) (2.1.0+cu121)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (from timm) (0.16.0+cu121)
+Requirement already satisfied: pyyaml in /usr/local/lib/python3.10/dist-packages (from timm) (6.0.1)
+Requirement already satisfied: huggingface-hub in /usr/local/lib/python3.10/dist-packages (from timm) (0.20.2)
+Requirement already satisfied: safetensors in /usr/local/lib/python3.10/dist-packages (from timm) (0.4.1)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (3.13.1)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (4.5.0)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (1.12)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (3.2.1)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (3.1.3)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (2023.6.0)
+Requirement already satisfied: triton==2.1.0 in /usr/local/lib/python3.10/dist-packages (from torch&gt;=1.7-&gt;timm) (2.1.0)
+Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from huggingface-hub-&gt;timm) (2.31.0)
+Requirement already satisfied: tqdm&gt;=4.42.1 in /usr/local/lib/python3.10/dist-packages (from huggingface-hub-&gt;timm) (4.66.1)
+Requirement already satisfied: packaging&gt;=20.9 in /usr/local/lib/python3.10/dist-packages (from huggingface-hub-&gt;timm) (23.2)
+Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from torchvision-&gt;timm) (1.23.5)
+Requirement already satisfied: pillow!=8.3.*,&gt;=5.3.0 in /usr/local/lib/python3.10/dist-packages (from torchvision-&gt;timm) (9.4.0)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2-&gt;torch&gt;=1.7-&gt;timm) (2.1.3)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;huggingface-hub-&gt;timm) (3.3.2)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;huggingface-hub-&gt;timm) (3.6)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;huggingface-hub-&gt;timm) (2.0.7)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;huggingface-hub-&gt;timm) (2023.11.17)
+Requirement already satisfied: mpmath&gt;=0.19 in /usr/local/lib/python3.10/dist-packages (from sympy-&gt;torch&gt;=1.7-&gt;timm) (1.3.0)
+Installing collected packages: timm
+Successfully installed timm-0.9.12</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.imports <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb3-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb3-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb3-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> zipfile</span>
+<span id="cb3-5"></span>
+<span id="cb3-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">'''Function for loading kaggle datasets locally or on kaggle</span></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">Returns a local path to data files</span></span>
+<span id="cb3-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">- input: Kaggle API Login Credentials, Kaggle Contest Name '''</span></span>
+<span id="cb3-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> loadData(creds, dataFile):</span>
+<span id="cb3-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># variable to check whether we're running on kaggle website or not</span></span>
+<span id="cb3-11">    iskaggle <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'KAGGLE_KERNEL_RUN_TYPE'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>)</span>
+<span id="cb3-12"></span>
+<span id="cb3-13">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># path for kaggle API credentials</span></span>
+<span id="cb3-14">    cred_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'~/.kaggle/kaggle.json'</span>).expanduser()</span>
+<span id="cb3-15"></span>
+<span id="cb3-16">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> cred_path.exists():</span>
+<span id="cb3-17">        cred_path.parent.mkdir(exist_ok<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb3-18">        cred_path.write_text(creds)</span>
+<span id="cb3-19">        cred_path.chmod(<span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0o600</span>)</span>
+<span id="cb3-20"></span>
+<span id="cb3-21">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Download data from Kaggle to path and extract files at path location</span></span>
+<span id="cb3-22"></span>
+<span id="cb3-23">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># local machine</span></span>
+<span id="cb3-24">    path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(dataFile)</span>
+<span id="cb3-25">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> iskaggle <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> path.exists():</span>
+<span id="cb3-26">        <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> kaggle</span>
+<span id="cb3-27">        kaggle.api.competition_download_cli(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(path))</span>
+<span id="cb3-28">        zipfile.ZipFile(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>path<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.zip'</span>).extractall(path)</span>
+<span id="cb3-29"></span>
+<span id="cb3-30">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># kaggle</span></span>
+<span id="cb3-31">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> iskaggle:</span>
+<span id="cb3-32">        fileName <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'../input/'</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> dataFile</span>
+<span id="cb3-33">        path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> fileName</span>
+<span id="cb3-34"></span>
+<span id="cb3-35">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> path</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="331c994a-0e72-4a13-ae3b-d179876d7832" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">creds <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span></span>
+<span id="cb4-2">dataFile <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'titanic'</span></span>
+<span id="cb4-3">path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> loadData(creds, dataFile)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading titanic.zip to /content
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 34.1k/34.1k [00:00&lt;00:00, 38.4MB/s]</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="49f8d412-7880-46ae-ed0e-9efb21394e6c" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check data files</span></span>
+<span id="cb7-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span> ls {path}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gender_submission.csv  test.csv  train.csv</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set up default settings</span></span>
+<span id="cb9-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> warnings, logging, torch</span>
+<span id="cb9-3">warnings.simplefilter(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ignore'</span>)</span>
+<span id="cb9-4">logging.disable(logging.WARNING)</span>
+<span id="cb9-5">np.set_printoptions(linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">130</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># load data files and find modes of categories</span></span>
+<span id="cb10-2">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'train.csv'</span>)</span>
+<span id="cb10-3">tst_df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test.csv'</span>)</span>
+<span id="cb10-4">modes <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df.mode().iloc[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span></code></pre></div>
+</div>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<section id="exploratory-data-analysis-data-preprocessing" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-data-analysis-data-preprocessing">Exploratory Data Analysis: Data Preprocessing</h3>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Standardize data types for modeling with random forests</span></span>
+<span id="cb11-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> proc_data(df):</span>
+<span id="cb11-3">    df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Fare'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df.Fare.fillna(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb11-4">    df.fillna(modes, inplace<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb11-5">    df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'LogFare'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.log1p(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Fare'</span>])</span>
+<span id="cb11-6">    df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Embarked'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.Categorical(df.Embarked)</span>
+<span id="cb11-7">    df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sex'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.Categorical(df.Sex)</span>
+<span id="cb11-8"></span>
+<span id="cb11-9">proc_data(df)</span>
+<span id="cb11-10">proc_data(tst_df)</span></code></pre></div>
+</div>
+</section>
+<section id="exploratory-data-analysis-data-exploration" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-data-analysis-data-exploration">Exploratory Data Analysis: Data Exploration</h3>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># categorical variables</span></span>
+<span id="cb12-2">cats<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Embarked"</span>]</span>
+<span id="cb12-3"></span>
+<span id="cb12-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># continuous variables</span></span>
+<span id="cb12-5">conts<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Age'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'SibSp'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Parch'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'LogFare'</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Pclass"</span>]</span>
+<span id="cb12-6"></span>
+<span id="cb12-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dependent variable (the thing we're trying to determine)</span></span>
+<span id="cb12-8">dep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Survived"</span></span></code></pre></div>
+</div>
+<div class="cell" data-outputid="2941484f-5d64-4f5a-ad78-5c17ea7c4441" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">df.Sex.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>0      male
+1    female
+2    female
+3    female
+4      male
+Name: Sex, dtype: category
+Categories (2, object): ['female', 'male']</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="986a6a2f-7224-4f61-ea5f-0abbc06ecd83" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">df.Sex.cat.codes.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>0    1
+1    0
+2    0
+3    0
+4    1
+dtype: int8</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="binary-split" class="level2">
+<h2 class="anchored" data-anchor-id="binary-split">Binary Split</h2>
+<!-- # - Random forests are made up of decision trees
+# - Decision trees are made up of binary splits
+
+# - Binary Split -> all rows placed into one of two groups, based on whether they're above or below
+# some threshold of some column
+
+# - Example: Threshold = 0.5 and column Sex (value is 0 for females and 1 for male ) -->
+<ul>
+<li>Random forests are made up of decision trees</li>
+<li>Decision trees are made up of binary splits</li>
+<li><code>Binary Split</code>: all rows placed into one of two groups based on whether they are above or below some threshold of some column. <strong>Example</strong>: Threshold = 0.5 and column Sex (<code>0</code> represents females, <code>1</code> represents males)</li>
+</ul>
+<div class="cell" data-outputid="49858994-0b58-4400-a566-7c6bb2e57e6f" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> seaborn <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> sns</span>
+<span id="cb17-2"></span>
+<span id="cb17-3">fig,axs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> plt.subplots(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, figsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>))</span>
+<span id="cb17-4">sns.barplot(data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df, y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>dep, x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>, ax<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>axs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(title<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Survival rate"</span>)</span>
+<span id="cb17-5">sns.countplot(data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df, x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>, ax<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>axs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(title<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>[Text(0.5, 1.0, 'Histogram')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="simple-model---categorical-variable-split-all-females-survive-and-no-males-do" class="level3">
+<h3 class="anchored" data-anchor-id="simple-model---categorical-variable-split-all-females-survive-and-no-males-do">Simple Model - Categorical Variable Split: All females survive and no males do</h3>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split training data into training and validation data</span></span>
+<span id="cb19-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - 25% validation, 75% training</span></span>
+<span id="cb19-3"></span>
+<span id="cb19-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> random</span>
+<span id="cb19-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sklearn.model_selection <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> train_test_split</span>
+<span id="cb19-6"></span>
+<span id="cb19-7">random.seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>)</span>
+<span id="cb19-8">trn_df,val_df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train_test_split(df, test_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.25</span>)</span>
+<span id="cb19-9">trn_df[cats] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_df[cats].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">apply</span>(<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">lambda</span> x: x.cat.codes)</span>
+<span id="cb19-10">val_df[cats] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> val_df[cats].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">apply</span>(<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">lambda</span> x: x.cat.codes)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create independent and dependent variables</span></span>
+<span id="cb20-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> xs_y(df):</span>
+<span id="cb20-3">    xs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df[cats <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> conts].copy()</span>
+<span id="cb20-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> xs,df[dep] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> dep <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> df <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb20-5"></span>
+<span id="cb20-6">trn_xs,trn_y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> xs_y(trn_df)</span>
+<span id="cb20-7">val_xs,val_y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> xs_y(val_df)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># predictions for simple model -&gt; female is coded as 0</span></span>
+<span id="cb21-2">preds <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> val_xs.Sex<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span></code></pre></div>
+</div>
+<div class="cell" data-outputid="78def71c-6b21-4e5f-eb37-567766cd021d" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># metrics (loss function) - Mean Absolute Error</span></span>
+<span id="cb22-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sklearn.metrics <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> mean_absolute_error</span>
+<span id="cb22-3">mean_absolute_error(val_y, preds)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0.21524663677130046</code></pre>
+</div>
+</div>
+</section>
+<section id="simple-model-2---continuous-variable-split-log-fare" class="level3">
+<h3 class="anchored" data-anchor-id="simple-model-2---continuous-variable-split-log-fare">Simple Model 2 - Continuous Variable Split: Log Fare</h3>
+<div class="cell" data-outputid="b8e4d485-9c29-4f4d-dcfb-06118db40f6c" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - 0 -&gt; did not survive</span></span>
+<span id="cb24-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - 1 -&gt; survived</span></span>
+<span id="cb24-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - boxen plot shows the average logfare for passengers that didn't survive is around 2.5</span></span>
+<span id="cb24-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># and for those who did survive it was around 3.2</span></span>
+<span id="cb24-5"></span>
+<span id="cb24-6">df_fare <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_df[trn_df.LogFare<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb24-7">fig,axs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> plt.subplots(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, figsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>))</span>
+<span id="cb24-8">sns.boxenplot(data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df_fare, x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>dep, y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"LogFare"</span>, ax<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>axs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb24-9">sns.kdeplot(data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df_fare, x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"LogFare"</span>, ax<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>axs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>&lt;Axes: xlabel='LogFare', ylabel='Density'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-17-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="3546e75a-4f69-42a8-a715-47cf3de488e0" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># predictions</span></span>
+<span id="cb26-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - based on the plots, data is showing that people who paid more for tickets were more likely to get put on lifeboat</span></span>
+<span id="cb26-3"></span>
+<span id="cb26-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># test theory</span></span>
+<span id="cb26-5">preds <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> val_xs.LogFare <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.7</span></span>
+<span id="cb26-6"></span>
+<span id="cb26-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># less accurate than the previous model</span></span>
+<span id="cb26-8">mean_absolute_error(val_y, preds)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>0.336322869955157</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="metric-score-function" class="level2">
+<h2 class="anchored" data-anchor-id="metric-score-function">Metric: Score Function</h2>
+<ul>
+<li><code>Score</code> calculates a measure of <code>impurity</code>, how much the binary split creates two groups where the rows in a group are each similar to each other, or dissimilar</li>
+<li>The similarity of rows inside a group can be measured by taking the standard deviation of the <code>dependent variable</code></li>
+<li>The higher the <code>SD</code>thn the rows are more different to each other</li>
+<li>Multiply the <code>SD</code> by the number of rows since a bigger group has more impact than a smaller group</li>
+</ul>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - need a function to determine how good model is based on different splits</span></span>
+<span id="cb28-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - need a way to try more columns and splits</span></span>
+<span id="cb28-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - instead of MAE use a function that calculates a measure of impurity -&gt;</span></span>
+<span id="cb28-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># how much the binary split creates two groups where the rows in a group are each similar to each other or dissimilar</span></span>
+<span id="cb28-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> ipywidgets <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> interact</span>
+<span id="cb28-6"></span>
+<span id="cb28-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> _side_score(side, y):</span>
+<span id="cb28-8">    tot <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> side.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>()</span>
+<span id="cb28-9">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> tot <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:</span>
+<span id="cb28-10">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb28-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> y[side].std() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> tot</span>
+<span id="cb28-12"></span>
+<span id="cb28-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - calculate the score for a split by adding up the scores for the left hand side and right hand side</span></span>
+<span id="cb28-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> score(col, y, split):</span>
+<span id="cb28-15">    lhs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> col<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> split</span>
+<span id="cb28-16">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> (_side_score(lhs,y) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> _side_score(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>lhs,y)) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(y)</span>
+<span id="cb28-17"></span>
+<span id="cb28-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># compute score for a particular variable (categorical, continuous)</span></span>
+<span id="cb28-19"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> iscore(nm, split):</span>
+<span id="cb28-20">    col <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_xs[nm]</span>
+<span id="cb28-21">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> score(col, trn_y, split)</span>
+<span id="cb28-22"></span>
+<span id="cb28-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># find the best split threshold for a particular variable (categorical, continuous)</span></span>
+<span id="cb28-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># function for finding best split</span></span>
+<span id="cb28-25"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> min_col(df, nm):</span>
+<span id="cb28-26">    col,y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df[nm],df[dep]</span>
+<span id="cb28-27">    unq <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> col.dropna().unique()</span>
+<span id="cb28-28">    scores <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([score(col, y, o) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> unq <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> np.isnan(o)])</span>
+<span id="cb28-29">    idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> scores.argmin()</span>
+<span id="cb28-30">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> unq[idx],scores[idx]</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="1e65cda6-67e3-4e5e-f65d-d0aae147e7b5" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># impurity score for Sex Split</span></span>
+<span id="cb29-2">score(trn_xs[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>], trn_y, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>0.40787530982063946</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="292f6565-08f5-4bdd-a443-427a7801b297" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># impurity score for Log Fare</span></span>
+<span id="cb31-2">score(trn_xs[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"LogFare"</span>], trn_y, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.7</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>0.47180873952099694</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="61bfea00-40ac-4a94-b6c9-6a698d36f6ff" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># interactive widget for finding the best threshold and split for continuous variables</span></span>
+<span id="cb33-2">interact(nm<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>conts, split<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15.5</span>)(iscore)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"183e82e7ea674a68b6f099a7fc9c180c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>&lt;function __main__.iscore(nm, split)&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="d81a2056-8e18-4ab2-91ef-3b6a33751ba5" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># interactive widget for finding best threshold and split for categorical variables</span></span>
+<span id="cb35-2">interact(nm<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>cats, split<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)(iscore)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"0f15c68276e8474480c45541d87b4cb5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>&lt;function __main__.iscore(nm, split)&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="ad9ae608-ff9a-41ff-fe63-b00fc076f3e5" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Automating Split Finding - Find Split for Age</span></span>
+<span id="cb37-2">nm <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Age"</span></span>
+<span id="cb37-3">col <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_xs[nm]</span>
+<span id="cb37-4">unq <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> col.unique()</span>
+<span id="cb37-5">unq.sort()</span>
+<span id="cb37-6">unq</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>array([ 0.42,  0.67,  0.75,  0.83,  0.92,  1.  ,  2.  ,  3.  ,  4.  ,  5.  ,  6.  ,  7.  ,  8.  ,  9.  , 10.  , 11.  , 12.  ,
+       13.  , 14.  , 14.5 , 15.  , 16.  , 17.  , 18.  , 19.  , 20.  , 21.  , 22.  , 23.  , 24.  , 24.5 , 25.  , 26.  , 27.  ,
+       28.  , 28.5 , 29.  , 30.  , 31.  , 32.  , 32.5 , 33.  , 34.  , 34.5 , 35.  , 36.  , 36.5 , 37.  , 38.  , 39.  , 40.  ,
+       40.5 , 41.  , 42.  , 43.  , 44.  , 45.  , 45.5 , 46.  , 47.  , 48.  , 49.  , 50.  , 51.  , 52.  , 53.  , 54.  , 55.  ,
+       55.5 , 56.  , 57.  , 58.  , 59.  , 60.  , 61.  , 62.  , 64.  , 65.  , 70.  , 70.5 , 74.  , 80.  ])</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="4c7bedd3-d5b8-4323-d8aa-145f920ee14f" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># find index where score is the lowest</span></span>
+<span id="cb39-2">scores <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([score(col, trn_y, o) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> unq <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> np.isnan(o)])</span>
+<span id="cb39-3">unq[scores.argmin()]</span>
+<span id="cb39-4"></span>
+<span id="cb39-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - In Age column, 6 is the optimal threshold cutoff in the training set</span></span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>6.0</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="23dcde8c-28b9-4b38-9df0-202cd274d688" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># test split finding function on age category</span></span>
+<span id="cb41-2">min_col(trn_df, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Age"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>(6.0, 0.478316717508991)</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="92b39538-ea97-48b8-b376-34f95d3c4557" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># find best split for all variables</span></span>
+<span id="cb43-2">cols <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cats <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> conts</span>
+<span id="cb43-3"></span>
+<span id="cb43-4">{o:min_col(trn_df, o) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> cols}</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>{'Sex': (0, 0.40787530982063946),
+ 'Embarked': (0, 0.47883342573147836),
+ 'Age': (6.0, 0.478316717508991),
+ 'SibSp': (4, 0.4783740258817434),
+ 'Parch': (0, 0.4805296527841601),
+ 'LogFare': (2.4390808375825834, 0.4620823937736597),
+ 'Pclass': (2, 0.46048261885806596)}</code></pre>
+</div>
+</div>
+</section>
+<section id="decision-tree" class="level2">
+<h2 class="anchored" data-anchor-id="decision-tree">Decision Tree</h2>
+<ul>
+<li>Take each group (male, female) and create one more binary split for each group</li>
+<li>Find the single best split for male, and single best split for female</li>
+<li>repeat same steps for male group and female group</li>
+<li>remove <code>Sex</code> from list of possible splits (since it’s already been used and there’s only one possible split for that binary column and create two new groups</li>
+</ul>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Improve OneR classifier which currently predicts survival based only on Sex category</span></span>
+<span id="cb45-2"></span>
+<span id="cb45-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - take each group (male, female) and create one more binary split for each of them</span></span>
+<span id="cb45-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - find the single best split for male, and single best split fo ffemale</span></span>
+<span id="cb45-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - repeat same steps once for males, once for females</span></span>
+<span id="cb45-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - remove sex from list of posssible spits and create two groups</span></span>
+<span id="cb45-7"></span>
+<span id="cb45-8">cols.remove(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>)</span>
+<span id="cb45-9">ismale <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_df.Sex<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb45-10">males,females <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> trn_df[ismale],trn_df[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>ismale]</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="d010f571-c540-422e-abb8-eb5d1147466c" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># best split for males</span></span>
+<span id="cb46-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#  - best split for males is Age &lt;= 6</span></span>
+<span id="cb46-3">{o:min_col(males, o) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> cols}</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>{'Embarked': (0, 0.3875581870410906),
+ 'Age': (6.0, 0.3739828371010595),
+ 'SibSp': (4, 0.3875864227586273),
+ 'Parch': (0, 0.3874704821461959),
+ 'LogFare': (2.803360380906535, 0.3804856231758151),
+ 'Pclass': (1, 0.38155442004360934)}</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="fd4c7888-f0a8-4a26-911f-11d6ed46ca17" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># best split for females</span></span>
+<span id="cb48-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - best split for females is PClass &lt;= 2</span></span>
+<span id="cb48-3">{o:min_col(females, o) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> cols}</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>{'Embarked': (0, 0.4295252982857327),
+ 'Age': (50.0, 0.4225927658431649),
+ 'SibSp': (4, 0.42319212059713535),
+ 'Parch': (3, 0.4193314500446158),
+ 'LogFare': (4.256321678298823, 0.41350598332911376),
+ 'Pclass': (2, 0.3335388911567601)}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - adding these two rules creates a decision tree where the model will first check whether sex is female or male</span></span>
+<span id="cb50-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - depending onthe result it will then check either age or pclass as appropriate</span></span>
+<span id="cb50-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - repeat the same process creating new rules for each of the four groups</span></span>
+<span id="cb50-4"></span>
+<span id="cb50-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - this process can be automated using the Decision Tree Classifier from sklearn</span></span>
+<span id="cb50-6"></span>
+<span id="cb50-7"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sklearn.tree <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> DecisionTreeClassifier, export_graphviz</span>
+<span id="cb50-8"></span>
+<span id="cb50-9">m <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> DecisionTreeClassifier(max_leaf_nodes<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>).fit(trn_xs, trn_y)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># draw decision tree</span></span>
+<span id="cb51-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> graphviz</span>
+<span id="cb51-3"></span>
+<span id="cb51-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> draw_tree(t, df, size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, ratio<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.6</span>, precision<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs):</span>
+<span id="cb51-5">    s<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>export_graphviz(t, out_file<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>, feature_names<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df.columns, filled<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, rounded<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>,</span>
+<span id="cb51-6">                      special_characters<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, rotate<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>, precision<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>precision, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs)</span>
+<span id="cb51-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> graphviz.Source(re.sub(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Tree {'</span>, <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'Tree </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">{{</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> size=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>size<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">; ratio=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>ratio<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>, s))</span></code></pre></div>
+</div>
+<ul>
+<li><code>Orange Nodes</code> - have lower survival rate</li>
+<li><code>Blue Nodes</code> - have larger survival rate</li>
+<li><code>Samples</code> - how many rows match a particular rule</li>
+<li><code>Values</code> - how many passengers perished or survived. Data is represented as <strong>(perished, survived)</strong></li>
+<li><code>Gini</code> - measure of impurity. similar to value calculated using <code>score</code> function. Gini calculates the probability that if you pick two rows from a group, you’ll get the same <code>dependent variable</code> result each time. If the group is all the same, the probability is <code>1.0</code> and <code>0.0</code> if they are all different.</li>
+</ul>
+<div class="cell" data-outputid="e618291a-bc1f-493d-cef2-f346e98b3891" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1">draw_tree(m, trn_xs, size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-33-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># gini definition</span></span>
+<span id="cb53-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> gini(cond):</span>
+<span id="cb53-3">    act <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df.loc[cond, dep]</span>
+<span id="cb53-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> act.mean()<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> act).mean()<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span></code></pre></div>
+</div>
+<div class="cell" data-outputid="c92c04da-24f0-4924-e1e1-eacc90086293" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1">gini(df.Sex<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'female'</span>), gini(df.Sex<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'male'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>(0.3828350034484158, 0.3064437162277842)</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="60675e9e-543d-4bc3-8c99-f927ebe0911c" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># compare to original oneR model (simple model 1)</span></span>
+<span id="cb56-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># - did worse than simple model 1</span></span>
+<span id="cb56-3">mean_absolute_error(val_y, m.predict(val_xs))</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>0.2242152466367713</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="0de1b4a3-27aa-4fe5-89fa-5a365a6b9a48" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># make a larger tree</span></span>
+<span id="cb58-2">m <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> DecisionTreeClassifier(min_samples_leaf<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>)</span>
+<span id="cb58-3">m.fit(trn_xs, trn_y)</span>
+<span id="cb58-4">draw_tree(m, trn_xs, size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-37-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="7ed401ea-027b-4bd1-97f9-92f146d02b83" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># compare this model to OneR version</span></span>
+<span id="cb59-2">mean_absolute_error(val_y, m.predict(val_xs))</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>0.18385650224215247</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb61" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># submit to kaggle - Jeremy got a score of 0.765</span></span>
+<span id="cb61-2">tst_df[cats] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tst_df[cats].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">apply</span>(<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">lambda</span> x: x.cat.codes)</span>
+<span id="cb61-3">tst_xs,_ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> xs_y(tst_df)</span>
+<span id="cb61-4"></span>
+<span id="cb61-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> subm(preds, suff):</span>
+<span id="cb61-6">    tst_df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Survived'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> preds</span>
+<span id="cb61-7">    sub_df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tst_df[[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'PassengerId'</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Survived'</span>]]</span>
+<span id="cb61-8">    sub_df.to_csv(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'sub-</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>suff<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.csv'</span>, index<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb61-9"></span>
+<span id="cb61-10">subm(m.predict(tst_xs), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'tree'</span>)</span></code></pre></div>
+</div>
+</section>
+<section id="random-forests" class="level2">
+<h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
+<!-- # - Leo Breiman -> create a bunch of bigger decision trees and take average of predictions
+# - this is called bagging
+# - want each model's prediction in the average ensemble to be uncorrelated with each other model. When averaging
+# all the predictions, the average will be equal to the true target value -> average of lots of uncorrelated random errors
+# is 0. -->
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Leo_Breiman">Leo Breiman</a> came up with <code>bagging</code>: if we take a bunch of large decision trees and take the average of their predictions then the averaged predictions will be equal to the true target value</li>
+<li>Each of the model’s predictions in the averaged ensembled need to be <strong>uncorrelated</strong> with each other model in order for the average predictions to equal the true value because <strong>the average of lots of uncorrelated random errors is zero</strong>.</li>
+<li>One way to create a bunch of uncorrelated values is to train each of them on a <strong>different random subset</strong> of the data.</li>
+</ul>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create tree on a random subset of data</span></span>
+<span id="cb62-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> get_tree(prop<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>):</span>
+<span id="cb62-3">    n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(trn_y)</span>
+<span id="cb62-4">    idxs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> random.choice(n, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>prop))</span>
+<span id="cb62-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> DecisionTreeClassifier(min_samples_leaf<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>).fit(trn_xs.iloc[idxs], trn_y.iloc[idxs])</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a bunch of trees</span></span>
+<span id="cb63-2">trees <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [get_tree() <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> t <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)]</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="894a8ef9-50c5-47f9-e4c6-0643bd42fa2a" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># prediction - average of all tree predictions</span></span>
+<span id="cb64-2">all_probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [t.predict(val_xs) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> t <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> trees]</span>
+<span id="cb64-3">avg_probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.stack(all_probs).mean(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb64-4"></span>
+<span id="cb64-5">mean_absolute_error(val_y, avg_probs)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>0.2272645739910314</code></pre>
+</div>
+</div>
+<ul>
+<li>the above result is close to the <code>sklearn random forest classifier</code></li>
+<li>In a real random forest, the <code>sklearn randomforest classifier</code> chooses a <strong>random subset of columns for each split</strong> in addition to choosing a <strong>random sample of data</strong> for each tree</li>
+</ul>
+<div class="cell" data-outputid="b88ae651-271f-49f9-a5eb-62c056c17fb9" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sklearn.ensemble <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> RandomForestClassifier</span>
+<span id="cb66-2"></span>
+<span id="cb66-3">rf <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> RandomForestClassifier(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, min_samples_leaf<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span>
+<span id="cb66-4">rf.fit(trn_xs, trn_y)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="cb66-5">mean_absolute_error(val_y, rf.predict(val_xs))</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>0.18834080717488788</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># submit to kaggle</span></span>
+<span id="cb68-2">subm(rf.predict(tst_xs), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'rf'</span>)</span></code></pre></div>
+</div>
+</section>
+<section id="feature-importance" class="level2">
+<h2 class="anchored" data-anchor-id="feature-importance">Feature Importance</h2>
+<ul>
+<li>Random forests can tell us which <strong>independent variables</strong> were the most important in the model using <code>feature importances</code>.</li>
+</ul>
+<div class="cell" data-outputid="f6a7ecdb-9ef2-4606-89d9-d3045c3ecbcf" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Feature Importance</span></span>
+<span id="cb69-2">pd.DataFrame(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">dict</span>(cols<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>trn_xs.columns, imp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>m.feature_importances_)).plot(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'cols'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'imp'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'barh'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>&lt;Axes: ylabel='cols'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-45-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="paddy-doctor" class="level2">
+<h2 class="anchored" data-anchor-id="paddy-doctor">Paddy Doctor</h2>
+<section id="part-1" class="level3">
+<h3 class="anchored" data-anchor-id="part-1">Part 1</h3>
+<section id="load-data" class="level4">
+<h4 class="anchored" data-anchor-id="load-data">Load Data</h4>
+<div class="cell" data-outputid="d2b108d7-9816-4bd4-b528-241a37c8d7ac" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1">creds <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span></span>
+<span id="cb71-2">dataFile <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'paddy-disease-classification'</span></span>
+<span id="cb71-3">path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> loadData(creds, dataFile)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading paddy-disease-classification.zip to /content
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 1.02G/1.02G [00:11&lt;00:00, 94.5MB/s]</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="80ad6ea2-2c87-4017-8a4f-d7beebf42e05" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check data files</span></span>
+<span id="cb74-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span> ls {path}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sample_submission.csv  test_images  train.csv  train_images</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="6089b7cc-72e5-4078-fe0d-9116a188a7e8" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set up default settings</span></span>
+<span id="cb76-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb76-3">set_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>)</span>
+<span id="cb76-4"></span>
+<span id="cb76-5">path.ls()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>(#4) [Path('paddy-disease-classification/sample_submission.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/test_images')]</code></pre>
+</div>
+</div>
+</section>
+<section id="exploratory-data-analysis-1" class="level4">
+<h4 class="anchored" data-anchor-id="exploratory-data-analysis-1">Exploratory Data Analysis</h4>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb78" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1">trn_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'train_images'</span></span>
+<span id="cb78-2">files <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_image_files(trn_path)</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="de256536-527b-4a31-d588-0f2fe3eb9a76" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb79" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1">img <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> PILImage.create(files[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb79-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(img.size)</span>
+<span id="cb79-3">img.to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(480, 640)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="49">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-50-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="b8a58d10-26cd-4e53-ae77-dbb1c61463e2" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb81" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check image sizes in parallel</span></span>
+<span id="cb81-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.parallel <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb81-3"></span>
+<span id="cb81-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> f(o):</span>
+<span id="cb81-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> PILImage.create(o).size</span>
+<span id="cb81-6"></span>
+<span id="cb81-7">sizes <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> parallel(f, files, n_workers<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>)</span>
+<span id="cb81-8">pd.Series(sizes).value_counts()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>(480, 640)    10403
+(640, 480)        4
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="data-loaders" class="level4">
+<h4 class="anchored" data-anchor-id="data-loaders">Data Loaders</h4>
+<div class="cell" data-outputid="51edb6d2-23f2-4144-ce65-c511feac9880" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb83" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>,</span>
+<span id="cb83-2">    item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">480</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'squish'</span>),</span>
+<span id="cb83-3">    batch_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>, min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span>
+<span id="cb83-4"></span>
+<span id="cb83-5">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-52-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="first-model" class="level4">
+<h4 class="anchored" data-anchor-id="first-model">First Model</h4>
+<div class="cell" data-outputid="49e698c8-83e9-44fd-b153-5ae839754815" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb84" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> vision_learner(dls, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'resnet26d'</span>, metrics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>error_rate, path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>).to_fp16()</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9c67875ce246407a9e67f1e0f7f10f03","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+</section>
+<section id="find-learning-rate" class="level4">
+<h4 class="anchored" data-anchor-id="find-learning-rate">Find Learning Rate</h4>
+<div class="cell" data-outputid="ae79524f-6cde-46af-ce63-e716e8abe2b6" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb85" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1">learn.lr_find(suggest_funcs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(valley, slide))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>SuggestedLRs(valley=0.0014454397605732083, slide=0.0030199517495930195)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-54-output-4.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="train-model" class="level4">
+<h4 class="anchored" data-anchor-id="train-model">Train Model</h4>
+<div class="cell" data-outputid="68eb228c-a0b8-4357-e44e-07d2dc5cc1e0" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb87" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1">learn.fine_tune(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.752005</td>
+<td>1.081317</td>
+<td>0.356079</td>
+<td>01:20</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.155641</td>
+<td>0.716448</td>
+<td>0.227295</td>
+<td>01:21</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.779499</td>
+<td>0.463007</td>
+<td>0.148967</td>
+<td>01:21</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.545381</td>
+<td>0.374054</td>
+<td>0.116290</td>
+<td>01:20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="submit-to-kaggle" class="level4">
+<h4 class="anchored" data-anchor-id="submit-to-kaggle">Submit to Kaggle</h4>
+<div class="cell" data-outputid="e14f0e6d-c395-4ea1-8b4c-174526e9109a" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb88" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1">sample_sub <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'sample_submission.csv'</span>)</span>
+<span id="cb88-2">sample_sub</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+
+  <div id="df-1fe4644c-4750-4a35-afb2-7c91a3385e8e" class="colab-df-container">
+    <div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">image_id</th>
+<th data-quarto-table-cell-role="th">label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>200001.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>200002.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>200003.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>200004.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>200005.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3464</td>
+<td>203465.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3465</td>
+<td>203466.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3466</td>
+<td>203467.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3467</td>
+<td>203468.jpg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3468</td>
+<td>203469.jpg</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>3469 rows × 2 columns</p>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-1fe4644c-4750-4a35-afb2-7c91a3385e8e')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"></path>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-1fe4644c-4750-4a35-afb2-7c91a3385e8e button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-1fe4644c-4750-4a35-afb2-7c91a3385e8e');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-43aeafa9-328c-4496-8d2b-ba54e9f14918">
+  <button class="colab-df-quickchart" onclick="quickchart('df-43aeafa9-328c-4496-8d2b-ba54e9f14918')" title="Suggest charts" style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 0 24 24" width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-43aeafa9-328c-4496-8d2b-ba54e9f14918 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+
+  <div id="id_a0e1cf5e-0195-4f14-a4d6-da9aec29cc26">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('sample_sub')" title="Generate code using this dataframe." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 0 24 24" width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"></path>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_a0e1cf5e-0195-4f14-a4d6-da9aec29cc26 button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('sample_sub');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div>
+</div>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb89" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create test set</span></span>
+<span id="cb89-2">tst_files <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_image_files(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test_images'</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>()</span>
+<span id="cb89-3">tst_dl <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dls.test_dl(tst_files)</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="698bac46-856e-4419-8ada-a10db544be9b" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb90" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># get model predictions for test set</span></span>
+<span id="cb90-2">probs,_,idxs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.get_preds(dl<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>tst_dl, with_decoded<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb90-3">idxs</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>tensor([7, 8, 7,  ..., 8, 1, 5])</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="7d82bed0-1311-45b1-b644-a8713a82ea47" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb92" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># map indexes to actual values</span></span>
+<span id="cb92-2">dls.vocab</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>['bacterial_leaf_blight', 'bacterial_leaf_streak', 'bacterial_panicle_blight', 'blast', 'brown_spot', 'dead_heart', 'downy_mildew', 'hispa', 'normal', 'tungro']</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="c30b859f-6f3f-406b-9c08-2aab6d01b859" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb94" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1">mapping <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">dict</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(dls.vocab))</span>
+<span id="cb94-2">results <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.Series(idxs.numpy(), name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"idxs"</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">map</span>(mapping)</span>
+<span id="cb94-3">results</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>0                       hispa
+1                      normal
+2                       hispa
+3                       blast
+4                       blast
+                ...          
+3464               dead_heart
+3465                    hispa
+3466                   normal
+3467    bacterial_leaf_streak
+3468               dead_heart
+Name: idxs, Length: 3469, dtype: object</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="6cef65d5-a616-47b9-af2a-4ed3f827c455" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb96" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## save submission</span></span>
+<span id="cb96-2">sample_sub[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'label'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> results</span>
+<span id="cb96-3">sample_sub.to_csv(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'part1_subm.csv'</span>, index<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb96-4"></span>
+<span id="cb96-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>head part1_subm.csv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>image_id,label
+200001.jpg,hispa
+200002.jpg,normal
+200003.jpg,hispa
+200004.jpg,blast
+200005.jpg,blast
+200006.jpg,brown_spot
+200007.jpg,dead_heart
+200008.jpg,brown_spot
+200009.jpg,normal</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="part-2" class="level3">
+<h3 class="anchored" data-anchor-id="part-2">Part 2</h3>
+<section id="load-data-resize-images" class="level4">
+<h4 class="anchored" data-anchor-id="load-data-resize-images">Load Data + Resize Images</h4>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb98" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1">trn_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'sml'</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb99" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb99-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># resize images to 192 x 256</span></span>
+<span id="cb99-2">resize_images(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'train_images'</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>trn_path, max_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, recurse<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span></code></pre></div>
+</div>
+</section>
+<section id="data-loaders-1" class="level4">
+<h4 class="anchored" data-anchor-id="data-loaders-1">Data Loaders</h4>
+<div class="cell" data-outputid="b51a776f-a874-43e7-aac5-8493da73ace1" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb100" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>,</span>
+<span id="cb100-2">    item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>)))</span>
+<span id="cb100-3"></span>
+<span id="cb100-4">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-64-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="train-model-1" class="level4">
+<h4 class="anchored" data-anchor-id="train-model-1">Train Model</h4>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb101" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb101-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> train(arch, item, batch, epochs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>):</span>
+<span id="cb101-2">    dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> ImageDataLoaders.from_folder(trn_path, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>, valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>item, batch_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>batch)</span>
+<span id="cb101-3">    learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> vision_learner(dls, arch, metrics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>error_rate).to_fp16()</span>
+<span id="cb101-4">    learn.fine_tune(epochs, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>)</span>
+<span id="cb101-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> learn</span></code></pre></div>
+</div>
+</section>
+<section id="learner" class="level4">
+<h4 class="anchored" data-anchor-id="learner">Learner</h4>
+<div class="cell" data-outputid="b1cda26c-d8f6-4b44-ad46-144a0efdea20" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb102" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'resnet26d'</span>, item<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>),</span>
+<span id="cb102-2">              batch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>, min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.899457</td>
+<td>1.388609</td>
+<td>0.453628</td>
+<td>00:26</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.295517</td>
+<td>0.951328</td>
+<td>0.316675</td>
+<td>00:27</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.016938</td>
+<td>0.664715</td>
+<td>0.213359</td>
+<td>00:28</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.712072</td>
+<td>0.473869</td>
+<td>0.157136</td>
+<td>00:28</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.533225</td>
+<td>0.334353</td>
+<td>0.113407</td>
+<td>00:27</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.444198</td>
+<td>0.322105</td>
+<td>0.107160</td>
+<td>00:27</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="convnext-model" class="level4">
+<h4 class="anchored" data-anchor-id="convnext-model">ConvNeXT Model</h4>
+<div class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb103" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb103-1">arch <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'convnext_small_in22k'</span></span></code></pre></div>
+</div>
+<div class="cell" data-outputid="2ba83c0d-f32a-4ee2-a83e-c7ce3367642d" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb104" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train(arch, item<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'squish'</span>),</span>
+<span id="cb104-2">              batch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>, min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9bb0f62d9183495a81e83fec2db9c8dc","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.334298</td>
+<td>0.838287</td>
+<td>0.277271</td>
+<td>00:33</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.660261</td>
+<td>0.457503</td>
+<td>0.147045</td>
+<td>00:42</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.499239</td>
+<td>0.358292</td>
+<td>0.108602</td>
+<td>00:41</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.326860</td>
+<td>0.206613</td>
+<td>0.064873</td>
+<td>00:41</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.195506</td>
+<td>0.147441</td>
+<td>0.044210</td>
+<td>00:42</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.122859</td>
+<td>0.135444</td>
+<td>0.043729</td>
+<td>00:42</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="preprocessing-experiments" class="level4">
+<h4 class="anchored" data-anchor-id="preprocessing-experiments">Preprocessing Experiments</h4>
+<section id="experiment-1-square-cropping" class="level5">
+<h5 class="anchored" data-anchor-id="experiment-1-square-cropping">Experiment 1: Square Cropping</h5>
+<div class="cell" data-outputid="80599f06-86f6-4506-b496-517155c7a3de" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb105" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train(arch, item<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>),</span>
+<span id="cb105-2">              batch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>, min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.322280</td>
+<td>0.803323</td>
+<td>0.258049</td>
+<td>00:32</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.719919</td>
+<td>0.449919</td>
+<td>0.144642</td>
+<td>00:39</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.554835</td>
+<td>0.352141</td>
+<td>0.111004</td>
+<td>00:39</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.361483</td>
+<td>0.254937</td>
+<td>0.083133</td>
+<td>00:39</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.213894</td>
+<td>0.178465</td>
+<td>0.053820</td>
+<td>00:39</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.163988</td>
+<td>0.167601</td>
+<td>0.053820</td>
+<td>00:39</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="experiment-2-padding" class="level5">
+<h5 class="anchored" data-anchor-id="experiment-2-padding">Experiment 2: Padding</h5>
+<div class="cell" data-outputid="9f837ae3-a21e-40ec-ba48-a815cce4a59f" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb106" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>,</span>
+<span id="cb106-2">                                   item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>ResizeMethod.Pad, pad_mode<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>PadMode.Zeros))</span>
+<span id="cb106-3">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-70-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="a157090c-c65f-475e-95cf-9b3cce56814f" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb107" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train(arch, item<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>), method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>ResizeMethod.Pad, pad_mode<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>PadMode.Zeros),</span>
+<span id="cb107-2">              batch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">171</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">128</span>), min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.268145</td>
+<td>0.720653</td>
+<td>0.234983</td>
+<td>00:33</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.661217</td>
+<td>0.485095</td>
+<td>0.160980</td>
+<td>00:43</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.548201</td>
+<td>0.309334</td>
+<td>0.091783</td>
+<td>00:42</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.342416</td>
+<td>0.222194</td>
+<td>0.067756</td>
+<td>00:55</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.213852</td>
+<td>0.183673</td>
+<td>0.053340</td>
+<td>00:42</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.142283</td>
+<td>0.149697</td>
+<td>0.047093</td>
+<td>00:45</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="experiment-3-time-test-augmentation" class="level5">
+<h5 class="anchored" data-anchor-id="experiment-3-time-test-augmentation">Experiment 3: Time Test Augmentation</h5>
+<p><code>Test Time Augmentation</code> - During the inference or validation, creating multiple versions of each image, using data augmentation, and then taking the <strong>average</strong> or <strong>maximum</strong> of the predictions for each augmented version of the image.</p>
+<div class="cell" data-outputid="414b4d45-5978-4f3c-b519-f8a4a55dded5" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb108" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check predictions and error rate of model without TTA</span></span>
+<span id="cb108-2">valid <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.dls.valid</span>
+<span id="cb108-3">preds,targs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.get_preds(dl<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>valid)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+</div>
+<div class="cell" data-outputid="798dca1e-99c8-4b81-c8c6-ff1a985be4dc" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb109" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># error (before TTA)</span></span>
+<span id="cb109-2">error_rate(preds, targs)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<pre><code>TensorBase(0.0471)</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="bc324e14-f5c5-454e-a732-5f760f67e3a5" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb111" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># data augmentation analysis</span></span>
+<span id="cb111-2">learn.dls.train.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>, unique<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6_files/figure-html/cell-74-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="3f340004-3a5f-4ed0-d1fe-19e7fdb55535" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb112" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Time Test Augmentation</span></span>
+<span id="cb112-2">tta_preds,_ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.tta(dl<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>valid)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="0" class="" max="5" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+</div>
+<div class="cell" data-outputid="99b5e2c9-952b-4baa-f81d-685cea203baa" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb113" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># error (after TTA)</span></span>
+<span id="cb113-2">error_rate(tta_preds, targs)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="75">
+<pre><code>TensorBase(0.0404)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="scaling---large-images-more-epochs" class="level4">
+<h4 class="anchored" data-anchor-id="scaling---large-images-more-epochs">Scaling - Large Images + More Epochs</h4>
+<div class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb115" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb115-1">trn_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'train_images'</span></span></code></pre></div>
+</div>
+<div class="cell" data-outputid="09a2bacd-0454-426c-faa9-0c060223475f" data-execution_count="77">
+<div class="sourceCode cell-code" id="cb116" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> train(arch, epochs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>,</span>
+<span id="cb116-2">              item<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Resize((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">480</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">360</span>), method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>ResizeMethod.Pad, pad_mode<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>PadMode.Zeros),</span>
+<span id="cb116-3">              batch<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>aug_transforms(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>), min_scale<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>))</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.092938</td>
+<td>0.646208</td>
+<td>0.207112</td>
+<td>01:38</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.529627</td>
+<td>0.281716</td>
+<td>0.088419</td>
+<td>01:45</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.395975</td>
+<td>0.252327</td>
+<td>0.083614</td>
+<td>01:45</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.353087</td>
+<td>0.355000</td>
+<td>0.101874</td>
+<td>01:44</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.296080</td>
+<td>0.194901</td>
+<td>0.058626</td>
+<td>01:45</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.247156</td>
+<td>0.180774</td>
+<td>0.048534</td>
+<td>01:45</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0.188586</td>
+<td>0.190078</td>
+<td>0.045651</td>
+<td>01:45</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0.134304</td>
+<td>0.152976</td>
+<td>0.031235</td>
+<td>01:45</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>0.110716</td>
+<td>0.140041</td>
+<td>0.030754</td>
+<td>01:44</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>0.076065</td>
+<td>0.121910</td>
+<td>0.027871</td>
+<td>01:46</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>0.056164</td>
+<td>0.119214</td>
+<td>0.026910</td>
+<td>01:44</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>0.049165</td>
+<td>0.114327</td>
+<td>0.027391</td>
+<td>01:45</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.035028</td>
+<td>0.114869</td>
+<td>0.027391</td>
+<td>01:45</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-outputid="53ba9aaa-0485-4c31-aba2-f4004f52ed09" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb117" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb117-1">tta_preds,targs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.tta(dl<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>learn.dls.valid)</span>
+<span id="cb117-2">error_rate(tta_preds, targs)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="0" class="" max="12" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display" data-execution_count="78">
+<pre><code>TensorBase(0.0235)</code></pre>
+</div>
+</div>
+</section>
+<section id="submit-to-kaggle-1" class="level4">
+<h4 class="anchored" data-anchor-id="submit-to-kaggle-1">Submit to Kaggle</h4>
+<div class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb119" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb119-1">tst_files <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_image_files(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'test_images'</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>()</span>
+<span id="cb119-2">tst_dl <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.dls.test_dl(tst_files)</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="aa9addf0-c9bb-4f7f-a6d8-f1e0304f4d8c" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb120" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># TTA for test set</span></span>
+<span id="cb120-2">preds,_ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.tta(dl<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>tst_dl)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="0" class="" max="12" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+</div>
+<div class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb121" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># indices of largest prediction</span></span>
+<span id="cb121-2">idxs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> preds.argmax(dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb122" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb122-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># find values in vocab</span></span>
+<span id="cb122-2">vocab <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array(learn.dls.vocab)</span>
+<span id="cb122-3">results <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.Series(vocab[idxs], name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"idxs"</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="f787daf8-c23f-4131-b819-a5a827af6c31" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb123" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb123-1">sample_sub <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'sample_submission.csv'</span>)</span>
+<span id="cb123-2">sample_sub[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'label'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> results</span>
+<span id="cb123-3">sample_sub.to_csv(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'part2_subm.csv'</span>, index<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb123-4"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>head part2_subm.csv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>image_id,label
+200001.jpg,hispa
+200002.jpg,normal
+200003.jpg,blast
+200004.jpg,blast
+200005.jpg,blast
+200006.jpg,brown_spot
+200007.jpg,dead_heart
+200008.jpg,brown_spot
+200009.jpg,hispa</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<ol type="1">
+<li><a href="https://course.fast.ai/Lessons/lesson6.html">FastAI Lesson 6</a></li>
+<li><a href="https://www.kaggle.com/code/jhoward/how-random-forests-really-work/">How random forests really work</a></li>
+<li><a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">First Steps: Road to the Top, Part 1</a></li>
+<li><a href="https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/">First Steps: Road to the Top, Part 2</a></li>
+<li><a href="https://youtube.com/playlist?list=PLfYUBJiXbdtSLBPJ1GMx-sQWf6iNhb8mM&amp;si=WwPOjgYofy4M9QUW">Jeremy Howard FastAI Live Coding</a></li>
+<li><a href="https://docs.fast.ai/">fast.ai docs</a></li>
+</ol>
+
+
+</section>
+
+ ]]></description>
+  <category>learning</category>
+  <category>fastai</category>
+  <category>deep learning</category>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6.html</guid>
+  <pubDate>Tue, 23 Jan 2024 08:00:00 GMT</pubDate>
+</item>
 <item>
   <title>FastAI Lesson 5: From-scratch model</title>
   <dc:creator>Pranav Rajan</dc:creator>
