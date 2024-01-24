@@ -22,7 +22,7 @@
 
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/how-random-forests-really-work/">How random forests really work</a>, <a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">First Steps: Road to the Top, Part 1</a> and <a href="https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/">Small models: Road to the Top, Part 2</a>.</p>
+<p>All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/how-random-forests-really-work/">How random forests really work</a>, <a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">First Steps: Road to the Top, Part 1</a> and <a href="https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/">Small models: Road to the Top, Part 2</a>.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
@@ -3545,7 +3545,7 @@ font-style: inherit;">!</span>head part2_subm.csv</span></code></pre></div>
 
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/linear-model-and-neural-net-from-scratch">Linear model and neural net from scratch</a> and <a href="https://www.kaggle.com/code/jhoward/why-you-should-use-a-framework">Why you should use a framework</a>.</p>
+<p>All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/linear-model-and-neural-net-from-scratch">Linear model and neural net from scratch</a> and <a href="https://www.kaggle.com/code/jhoward/why-you-should-use-a-framework">Why you should use a framework</a>.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
@@ -8722,7 +8722,7 @@ font-style: inherit;">!</span>head ensemble_sub.csv</span></code></pre></div>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/getting-started-with-nlp-for-absolute-beginners">Getting Start With NLP for Absolute Begginers</a> and <a href="https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster/">Iterate Like A Grandmaster</a>.</p>
+<p>All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/getting-started-with-nlp-for-absolute-beginners">Getting Start With NLP for Absolute Begginers</a> and <a href="https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster/">Iterate Like A Grandmaster</a>.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
@@ -13750,7 +13750,7 @@ font-style: inherit;">'AveRooms'</span>)</span></code></pre></div>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>All of this code was written by Jeremy Howard and the authors of the FastAI book. My modification to their code was adding print statements and comments to understand what each line of code was doing.</p>
+<p>All of this code was written by Jeremy Howard and the authors of the FastAI book. I modified it slightly to include my own print statements, comments and additional helper functions to understand how the code works.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>

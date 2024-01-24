@@ -11,14 +11,14 @@
     "href": "posts/fastai-lesson5/fastai-lesson5.html",
     "title": "FastAI Lesson 5: From-scratch model",
     "section": "",
-    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code Linear model and neural net from scratch and Why you should use a framework."
+    "text": "All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code Linear model and neural net from scratch and Why you should use a framework."
   },
   {
     "objectID": "posts/fastai-lesson5/fastai-lesson5.html#acknowledgements",
     "href": "posts/fastai-lesson5/fastai-lesson5.html#acknowledgements",
     "title": "FastAI Lesson 5: From-scratch model",
     "section": "",
-    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code Linear model and neural net from scratch and Why you should use a framework."
+    "text": "All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code Linear model and neural net from scratch and Why you should use a framework."
   },
   {
     "objectID": "posts/fastai-lesson5/fastai-lesson5.html#summary",
@@ -186,7 +186,7 @@
     "href": "posts/fastai-lesson4/fastai-lesson4.html#acknowledgements",
     "title": "FastAI Lesson 4: Natural Language(NLP)",
     "section": "Acknowledgements",
-    "text": "Acknowledgements\nAll of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code Getting Start With NLP for Absolute Begginers and Iterate Like A Grandmaster."
+    "text": "Acknowledgements\nAll of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code Getting Start With NLP for Absolute Begginers and Iterate Like A Grandmaster."
   },
   {
     "objectID": "posts/fastai-lesson4/fastai-lesson4.html#summary",
@@ -354,7 +354,7 @@
     "href": "posts/fastai-lesson3/fastai-lesson3.html#acknowledgements",
     "title": "FastAI Lesson 3: Neural Network Foundations",
     "section": "Acknowledgements",
-    "text": "Acknowledgements\nAll of this code was written by Jeremy Howard and the authors of the FastAI book. My modification to their code was adding print statements and comments to understand what each line of code was doing."
+    "text": "Acknowledgements\nAll of this code was written by Jeremy Howard and the authors of the FastAI book. I modified it slightly to include my own print statements, comments and additional helper functions to understand how the code works."
   },
   {
     "objectID": "posts/fastai-lesson3/fastai-lesson3.html#summary",
@@ -487,14 +487,14 @@
     "href": "posts/fastai-lesson6/fastai-lesson6.html",
     "title": "FastAI Lesson 6: Random Forests",
     "section": "",
-    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
+    "text": "All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
   },
   {
     "objectID": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
     "href": "posts/fastai-lesson6/fastai-lesson6.html#acknowledgements",
     "title": "FastAI Lesson 6: Random Forests",
     "section": "",
-    "text": "All of this code was written by Jeremy Howard and the FastAI team and I modified it slightly to include my own print statements and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
+    "text": "All of this code was written by Jeremy Howard and the FastAI team. I modified it slightly to include my own print statements, comments and additional helper functions based on Jeremy’s code. This is the source for the original code How random forests really work, First Steps: Road to the Top, Part 1 and Small models: Road to the Top, Part 2."
   },
   {
     "objectID": "posts/fastai-lesson6/fastai-lesson6.html#summary",
