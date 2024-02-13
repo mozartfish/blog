@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mozartfish.github.io/blog/about.html</loc>
-    <lastmod>2024-02-13T20:03:56.521Z</lastmod>
+    <lastmod>2024-02-13T22:40:57.675Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/fastai-lesson5/fastai-lesson5.html</loc>
-    <lastmod>2024-02-13T20:03:55.213Z</lastmod>
+    <lastmod>2024-02-13T22:40:56.323Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1.html</loc>
-    <lastmod>2024-02-13T20:03:50.246Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson4/fastai-lesson4.html</loc>
-    <lastmod>2024-02-13T20:03:49.058Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3.html</loc>
-    <lastmod>2024-02-13T20:03:46.731Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6.html</loc>
-    <lastmod>2024-02-13T20:03:44.447Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</loc>
-    <lastmod>2024-02-13T20:03:47.142Z</lastmod>
+    <lastmod>2024-02-13T22:40:51.135Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/welcome/index.html</loc>
-    <lastmod>2024-02-13T20:03:49.390Z</lastmod>
+    <lastmod>2024-02-13T22:40:49.411Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson0/index.html</loc>
+    <lastmod>2024-02-13T22:40:47.055Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson6/fastai-lesson6.html</loc>
+    <lastmod>2024-02-13T22:40:44.331Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson3/fastai-lesson3.html</loc>
+    <lastmod>2024-02-13T22:40:46.599Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson4/fastai-lesson4.html</loc>
+    <lastmod>2024-02-13T22:40:49.079Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2.html</loc>
+    <lastmod>2024-02-13T22:40:50.207Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/posts/fastai-lesson7/FastAILesson7.html</loc>
-    <lastmod>2024-02-13T20:03:53.234Z</lastmod>
+    <lastmod>2024-02-13T22:40:54.379Z</lastmod>
   </url>
   <url>
     <loc>https://mozartfish.github.io/blog/index.html</loc>
-    <lastmod>2024-02-13T20:03:56.209Z</lastmod>
+    <lastmod>2024-02-13T22:40:57.359Z</lastmod>
   </url>
 </urlset>

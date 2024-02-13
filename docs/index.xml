@@ -26,8 +26,7 @@
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy explains Collaborative Filtering and how its application in <em>recommendation systems</em> and continues the discussion of how to iterate solutions for the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor: Paddy Disease Classification</a> challenge.</p>
-<p>The section on <em>cross-entropy loss</em> was difficult for me but rewatching Jeremy’s discussion of the math and writing the code helped me understand the math.</p>
+<p>In this lesson, Jeremy explains Collaborative Filtering and its application in <em>recommendation systems</em> and continues the discussion of his process for the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor: Paddy Disease Classification</a> challenge. The section on <em>cross-entropy loss</em> was difficult for me but rewatching the cross entropy loss section of the video and reworking the cross entropy loss spreadsheet calculations helped me understand how cross entropy loss works.</p>
 </section>
 <section id="jeremy-howards-advice" class="level2">
 <h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
@@ -6312,7 +6311,7 @@ font-style: inherit;">0.1</span>)</span></code></pre></div>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy explains Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts discussing his process and iteration of how he developed his solutions for the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor: Paddy Disease Classification</a> challenge.</p>
+<p>In this lesson, Jeremy goes over Random Forests, Decision Trees, Binary Splits, Bagging and Gradient Boosting. Towards the middle half of the lesson, Jeremy starts a deep dive of his process in achieving the top scores for the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor: Paddy Disease Classification</a> challenge.</p>
 </section>
 <section id="jeremy-howards-advice" class="level2">
 <h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
@@ -9835,8 +9834,7 @@ font-style: inherit;">!</span>head part2_subm.csv</span></code></pre></div>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy goes over training a model from scratch using a linear model, neural network and deep learning before finally walking through training a model using fastai + pytorch and an ensemble. This lesson is actually <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a>, <a href="https://course.fast.ai/Lessons/lesson5.html">lesson 5</a> and part of <a href="https://course.fast.ai/Lessons/lesson6.html">lesson 6</a> so I had to go back to review <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a> to make sure I understood the material for <a href="https://course.fast.ai/Lessons/lesson5.html">lesson 5</a>. I highly recommend going over <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a> and <a href="https://nbviewer.org/github/fastai/fastbook/blob/master/04_mnist_basics.ipynb">chapter 4</a> before this lesson because Jeremy doesn’t go too deep into the meaning of tensor shape and rank as he does in <code>chapter 4</code>.</p>
-<p>This lesson was really exciting from the programming side because I learned more about python and numerical programming with partials, broadcasting, data cleaning with pandas, and <a href="https://www.kaggle.com/code/gunesevitan/titanic-advanced-feature-engineering-tutorial/">feature engineering</a>.</p>
+<p>In this lesson, Jeremy goes over training a model from scratch using a linear model, neural network and deep learning before finally walking through training a model using fastai + pytorch and an ensemble. This lesson is actually <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a>, <a href="https://course.fast.ai/Lessons/lesson5.html">lesson 5</a> and part of <a href="https://course.fast.ai/Lessons/lesson6.html">lesson 6</a> so I had to go back to review <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a> to make sure I understood the material for <a href="https://course.fast.ai/Lessons/lesson5.html">lesson 5</a>. I highly recommend going over <a href="https://course.fast.ai/Lessons/lesson3.html">lesson 3</a> and <a href="https://nbviewer.org/github/fastai/fastbook/blob/master/04_mnist_basics.ipynb">chapter 4</a> before this lesson because Jeremy doesn’t go too deep into the meaning of tensor shape and rank as he does in <code>chapter 4</code>. This lesson was really exciting from the programming side because I learned more about python and numerical programming with partials, broadcasting, data cleaning with pandas, and <a href="https://www.kaggle.com/code/gunesevitan/titanic-advanced-feature-engineering-tutorial/">feature engineering</a>.</p>
 </section>
 <section id="titanic---machine-learning-from-disaster" class="level2">
 <h2 class="anchored" data-anchor-id="titanic---machine-learning-from-disaster">Titanic - Machine Learning From Disaster</h2>
@@ -15004,7 +15002,7 @@ font-style: inherit;">!</span>head ensemble_sub.csv</span></code></pre></div>
 
 <section id="announcements" class="level2">
 <h2 class="anchored" data-anchor-id="announcements">Announcements</h2>
-<p>Happy New Year! I’m finally back to FastAI after taking a break due to job applications, trying to learn Golang and reflecting on my job search. This lesson was particularly challenging for me because I ran into a bunch of weird bugs and updates to the hugging face transformer API. I had no idea what the code was doing in the FastAI example despite copying Jeremy’s code verbatim and printing print statements. After spending some time trying to debug and understand what each part of the code setup was doing with hugging face and Jeremy’s code I finally feel comfortable trying to write a blog post about this lesson.</p>
+<p>Happy New Year! I’m finally back to FastAI after taking a break due to job applications, trying to learn Golang and reflecting on my job search. This lesson was particularly challenging for me because I ran into a bunch of weird bugs and updates with the Hugging Face Transformer API. I had no idea what the code was doing in the FastAI example despite copying Jeremy’s code verbatim and printing print statements. After spending some time trying to debug and understand what each part of the code setup was doing with Hugging Face and Jeremy’s code I finally feel comfortable trying to write a blog post about this lesson.</p>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
@@ -15012,8 +15010,7 @@ font-style: inherit;">!</span>head ensemble_sub.csv</span></code></pre></div>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy gives an overview of his pioneering work with ULMFit, how to use Transformers and the set up for participating on kaggle.</p>
-<p>I’m no NLP expert and don’t have an interest in NLP but what really excited me was that I finally understood what the iteration and development process was for a Kaggle Competition. This had been one of my goals when I embarked on FastAI.</p>
+<p>In this lesson, Jeremy gives an overview of his pioneering work on ULMFit, how to use Transformers and the set up for participating on Kaggle. I’m no NLP expert and don’t have an interest in NLP but what really excited me was that I finally understood what the iteration and development process was for a Kaggle Competition. This had been one of my goals when I embarked on FastAI.</p>
 </section>
 <section id="jeremy-howards-advice" class="level2">
 <h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
@@ -20036,7 +20033,7 @@ font-style: inherit;">'AveRooms'</span>)</span></code></pre></div>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>All of this code was written by Jeremy Howard and the authors of the FastAI book. I modified it slightly to include my own print statements, comments and additional helper functions to understand how the code works.</p>
+<p>All of this code was written by Jeremy Howard and the authors of the FastAI book. I modified it slightly to include my own print statements, comments and additional helper functions to understand how the code works. This is the source for the original code <a href="https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work">How does a neural net really work</a> and <a href="https://nbviewer.org/github/fastai/fastbook/blob/master/04_mnist_basics.ipynb">FastAI Chapter 4</a>.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
@@ -25171,6 +25168,785 @@ font-style: inherit;">0.1</span>)</span></code></pre></div>
   <pubDate>Mon, 18 Dec 2023 08:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>FastAI Lesson 2: Production</title>
+  <dc:creator>Pranav Rajan</dc:creator>
+  <link>https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="announcments" class="level2">
+<h2 class="anchored" data-anchor-id="announcments">Announcments</h2>
+<p>Finally back! Had some deadlines followed by issues with gradio, kaggle, Firefox gtk, quarto and jupyter but now everything is working for me to publish this post. I’d like to give a shoutout to Kevin Liu for his help in getting up to speed with the updated gradio API. Kevin reviewed my gradio example and took some helpful notes about the errors he ran into which helped me debug the differences between the current version of gradio and that used in Tanishq’s example.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this lesson, Jeremy walks through a bear classification model example and then spends most of the lesson focusing on how to deploy a model into production. The production example in this lesson works well for personal projects but is different from what the process is in industry. I thought it was a useful lesson for how to quickly get a model and simple web interface up and running.</p>
+</section>
+<section id="my-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts">My Thoughts</h2>
+<p>Although Jeremy didn’t directly address this in the lecture video, designing user interfaces for data science tasks is difficult (this is based on my personal experience) because there are many different requirements to satisfy. If your audience is a <strong>boss, manager, team, data scientists</strong>, they probably want to interact with a model ASAP. To save development time and get a basic application working tools like <a href="https://www.gradio.app/">gradio</a>, <a href="https://streamlit.io/">streamlit</a>, <a href="https://altair-viz.github.io/">altair</a> and <a href="https://colab.research.google.com/">colab</a> do a great job but trade <strong>performance, user experience and features</strong> for iteration speed and immediate results. Another audience is <strong>enthusiasts and expert users</strong> who want a core set of features that address <strong>performance, utility, interaction, and end user experience</strong> who may be willing to trade development time for a well crafted interactive data experience. For these needs, tools like <a href="https://d3js.org/">D3</a>, <a href="https://svelte.dev/">Svelte</a>, <a href="https://vuejs.org/">Vue</a>, <a href="https://react.dev/">React</a> will give greater control and freedom for creative expression and delivery but require significant development time and testing.</p>
+<p>I would probably start off with gradio or streamlit for prototyping and then gradually work with a designer/web developer to build a scalable performant web interface to interact with the model. Through personal experience, I’ve learned that debugging python code that renders javascript, html and css for the web can be a nightmare especially when working with 1,000+ datapoints for interactive web data interfaces.</p>
+<p>Gradio reminded me a lot of streamlit. I liked streamlit for its simplicity in creating components but the downside was that its simplicity offered few opportunities for cusomizing components beyond what streamlit offered. The syntax for both streamlit and gradio were difficult for me to follow initially because during debugging I sometimes ran into web rendering bugs that were caused by the way I used a function from the streamlit/gradio library. Through trial and error I figured out what works but the process took a long time because I couldn’t come up with an effective development process.</p>
+<p>I try to avoid using streamlit and gradio whenever I can but the process of learning how to set up gradio and deploying a model + interface on hugging face spaces was definitely worth it. I might come back to this lesson in the future once I finish the rest of the course to experiment with how to build an interface for a model.</p>
+</section>
+<section id="jeremy-howards-advice" class="level2">
+<h2 class="anchored" data-anchor-id="jeremy-howards-advice">Jeremy Howard’s Advice</h2>
+<ul>
+<li>Train a model before data cleaning because it helps find data issues more quickly and easily.</li>
+</ul>
+</section>
+<section id="terminology" class="level2">
+<h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
+<p><strong>Object Recognition</strong> - Computers can recognize what items are in an image at least as well as people can.</p>
+<p><strong>Object Detection</strong> - Computers can recgonize where objects in an image are, and can highlight their locations and name each found object.</p>
+<p><strong>Segmentation</strong> - A sub-area of <code>object detection</code> where every pixel is categorized on what kind of object it is part of</p>
+<p><strong>Data Augmentation</strong> - creating random variations of our input data such that they appear different but do not change the information in the data. Augmentation techniques for images include rotation, flipping, perspective warping, brightness, contrast.</p>
+</section>
+<section id="picasso-or-matisse-model" class="level2">
+<h2 class="anchored" data-anchor-id="picasso-or-matisse-model">Picasso or Matisse Model</h2>
+<p>Inspired by Jeremy’s bear example, I changed my Picasso Braque example from my previous post and decided to instead try two different artists who weren’t so similar, in this case I chose Henri Matisse and Pablo Picasso. I trained the model the same way I did the Picasso Braques example but one thing I noticed was that some of the images seemed off for a duckduckgo search where duckduckgo would pull up a portrait of Picasso that didn’t look like it was from the same period I was searching. To try and fix this I tried to refresh the notebook runs multiple times until I got base images from actual Picasso and Matisse paintings. Similar to the Picasso Braque example, my Picasso predictions were off even though the label was correct but the Matisse ones were accurate.</p>
+<p>After I tried Picasso and Matisse paintings, I tried different Picasso artworks such as his sculptures and got correct classifications. One person I shared the model with tried uploading their family thanksgiving photo to see what happened and the model classified the photo as 97%. This was quite intriguing to me because I had not even trained the model on images other than picasso and matisse paintings. I’m only writing on Lesson 2, but Jeremy’s discussion about transfer learning in Lesson 1 and the book has me wondering if the classification of the 97% Picasso Thanksgiving photo is a bug and use case I didn’t consider or if it has something to do with the resnet-18 base model with how it picked up the color, line and movement.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install the latest libraries</span></span>
+<span id="cb1-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Uqq fastai duckduckgo_search</span></code></pre></div>
+</div>
+<section id="step-1-gather-data" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-gather-data">Step 1: Gather Data</h3>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> duckduckgo_search <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ddg_images</span>
+<span id="cb2-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># helper function for searching for images</span></span>
+<span id="cb2-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> search_images(term, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>):</span>
+<span id="cb2-6">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Searching for '</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>term<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'"</span>)</span>
+<span id="cb2-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> L(ddg_images(term, max_results<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>max_images)).itemgot(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'image'</span>)</span></code></pre></div>
+</div>
+<div class="cell" data-outputid="6469196d-efd1-4e70-f9ae-21da7cae8718" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">urls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Pablo Picasso Fauvism Paintings'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-2">urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'Pablo Picasso Fauvism Paintings'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/lib/python3.10/dist-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>'https://i.pinimg.com/736x/b5/69/e1/b569e151ba0a9adf0136f5bdd7d4401b.jpg'</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="3696c818-6658-4da8-dfee-ff9a0553f4ee" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastdownload <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> download_url</span>
+<span id="cb7-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb7-3">dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso.jpg'</span></span>
+<span id="cb7-4">download_url(urls[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], dest, show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb7-5">im <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(dest)</span>
+<span id="cb7-6">im.to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="a8183896-c442-4137-a429-71b716fef8ff" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">download_url(search_images(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Henri Matisse Fauvism Paintings'</span>, max_images<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>],</span>
+<span id="cb8-2">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'matisse.jpg'</span>,</span>
+<span id="cb8-3">            show_progress<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb8-4">Image.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'matisse.jpg'</span>).to_thumb(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'Henri Matisse Fauvism Paintings'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/lib/python3.10/dist-packages/duckduckgo_search/compat.py:40: UserWarning: ddg_images is deprecated. Use DDGS().images() generator
+  warnings.warn("ddg_images is deprecated. Use DDGS().images() generator")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="ad422104-34f2-4d49-a4e2-0b5036eac642" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1">searches <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Pablo Picasso'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Henri Matisse'</span></span>
+<span id="cb11-2">path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso_or_matisse'</span>)</span>
+<span id="cb11-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sleep</span>
+<span id="cb11-4"></span>
+<span id="cb11-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> o <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> searches:</span>
+<span id="cb11-6">    dest <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span>
+<span id="cb11-7">    dest.mkdir(exist_ok<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, parents<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb11-8">    download_images(dest,urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> fauvism paintings'</span>))</span>
+<span id="cb11-9">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server</span></span>
+<span id="cb11-10">    download_images(dest,urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> still life fauvism paintings'</span>))</span>
+<span id="cb11-11">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server</span></span>
+<span id="cb11-12">    download_images(dest,urls<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>search_images(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>o<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> fauvism scenic paintings'</span>))</span>
+<span id="cb11-13">    sleep(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sleep between searches to avoid spamming server</span></span>
+<span id="cb11-14">    resize_images(path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o, max_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">400</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>o)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'Pablo Picasso fauvism paintings'
+Searching for 'Pablo Picasso still life fauvism paintings'
+Searching for 'Pablo Picasso fauvism scenic paintings'
+Searching for 'Henri Matisse fauvism paintings'
+Searching for 'Henri Matisse still life fauvism paintings'
+Searching for 'Henri Matisse fauvism scenic paintings'</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-train-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-train-model">Step 2: Train Model</h3>
+<div class="cell" data-outputid="429acff4-66aa-4a83-edb2-bfe578ead261" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove images that failed to download properly</span></span>
+<span id="cb13-2">failed <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> verify_images(get_image_files(path))</span>
+<span id="cb13-3">failed.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">map</span>(Path.unlink)</span>
+<span id="cb13-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(failed)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="012ee09f-5275-4f48-dd64-c22a631d28f8" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into training set, validation set</span></span>
+<span id="cb15-2">dls <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> DataBlock(</span>
+<span id="cb15-3">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># specify input type(image), output type(category aka label)</span></span>
+<span id="cb15-4">    blocks<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(ImageBlock, CategoryBlock),</span>
+<span id="cb15-5">    get_items<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>get_image_files,</span>
+<span id="cb15-6">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># split data into 80% training data, and 20% validation data</span></span>
+<span id="cb15-7">    splitter<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RandomSplitter(valid_pct<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, seed<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>),</span>
+<span id="cb15-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define the label</span></span>
+<span id="cb15-9">    get_y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>parent_label,</span>
+<span id="cb15-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># standardize and resize all images to 192 x 192</span></span>
+<span id="cb15-11">    item_tfms<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[Resize(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">192</span>, method<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'squish'</span>)]</span>
+<span id="cb15-12">).dataloaders(path, bs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>)</span>
+<span id="cb15-13"></span>
+<span id="cb15-14">dls.show_batch(max_n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-outputid="3337aab5-1727-4520-d4b6-9863c25d2359" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># train a resnet model on the data</span></span>
+<span id="cb16-2">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> vision_learner(dls, resnet18, metrics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>error_rate)</span>
+<span id="cb16-3">learn.fine_tune(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.003311</td>
+<td>0.399668</td>
+<td>0.160377</td>
+<td>00:04</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">error_rate</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.362328</td>
+<td>0.233523</td>
+<td>0.084906</td>
+<td>00:02</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.323960</td>
+<td>0.221361</td>
+<td>0.075472</td>
+<td>00:03</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.253416</td>
+<td>0.133047</td>
+<td>0.037736</td>
+<td>00:04</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.199347</td>
+<td>0.111490</td>
+<td>0.037736</td>
+<td>00:02</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="step-3-test-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-test-model">Step 3: Test Model</h3>
+<div class="cell" data-outputid="00f7b617-3796-450e-883a-f6dad2b4eb67" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">is_picasso,_,probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.predict(PILImage.create(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso.jpg'</span>))</span>
+<span id="cb17-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"This is a: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>is_picasso<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">."</span>)</span>
+<span id="cb17-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Probability it's a picasso: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>probs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is a: Pablo Picasso.
+Probability it's a picasso: 0.0005</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="008c95d8-0c6a-493c-81a2-ab733366c777" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">is_matisse,_,probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.predict(PILImage.create(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'matisse.jpg'</span>))</span>
+<span id="cb19-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"This is a: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>is_matisse<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">."</span>)</span>
+<span id="cb19-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Probability it's a matisse: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>probs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is a: Henri Matisse.
+Probability it's a matisse: 0.9936</code></pre>
+</div>
+</div>
+</section>
+<section id="step-4-save-and-export-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-save-and-export-model">Step 4: Save and Export Model</h3>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1">learn.export(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'model.pkl'</span>)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="gradio-hugging-face-spaces" class="level2">
+<h2 class="anchored" data-anchor-id="gradio-hugging-face-spaces">Gradio + Hugging Face Spaces</h2>
+<p>The following code was originally written by Dr.&nbsp;Tanishq Abraham and published in the blog post: <a href="https://www.tanishq.ai/blog/posts/2021-11-16-gradio-huggingface.html">Gradio + Hugging Face Spaces: A Tutorial</a>. It was modified by me and Kevin Liu to work with the current version of the gradio api. Currently the code works on Hugging Face Spaces but may break in the future as gradio continues updating its API.</p>
+<p>My recommendation to get gradio and Hugging Face Spaces working is to start off with Tanishq’s article and consult the gradio documentation to figure out the differences between the current version of the API and the version used in the article. I tried getting the pet classifier example working first before moving on to applying gradio to my Picasso Matisse Model which saved a lot of headache trying to figure out how git LFS and Hugging Face Spaces worked with my example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> gradio <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> gr</span>
+<span id="cb22-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb22-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> skimage</span>
+<span id="cb22-4"></span>
+<span id="cb22-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># load model </span></span>
+<span id="cb22-6">learn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> load_learner(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'model.pkl'</span>) </span>
+<span id="cb22-7"></span>
+<span id="cb22-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define prediction function </span></span>
+<span id="cb22-9">labels <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.dls.vocab</span>
+<span id="cb22-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> predict(img):</span>
+<span id="cb22-11">    img <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> PILImage.create(img)</span>
+<span id="cb22-12">    pred,pred_idx,probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> learn.predict(img)</span>
+<span id="cb22-13">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {labels[i]: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>(probs[i]) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(labels))}</span>
+<span id="cb22-14"></span>
+<span id="cb22-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define interface structure </span></span>
+<span id="cb22-16">title <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Picasso or Mattise Classifier"</span></span>
+<span id="cb22-17">description <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A classifier trained on Pablo Picasso and Henri Mattise paintings with fast.ai."</span></span>
+<span id="cb22-18">examples <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'picasso.jpg'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'matisse.jpg'</span>]</span>
+<span id="cb22-19">gr.Interface(fn<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>predict, inputs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[gr.Image(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">type</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pil"</span>)], outputs<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>gr.Label(num_top_classes<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)).launch(share<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb22-20"></span>
+<span id="cb22-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># interpretation = 'default'</span></span>
+<span id="cb22-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># enable_queue = True </span></span>
+<span id="cb22-23"></span>
+<span id="cb22-24"></span>
+<span id="cb22-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># def greet(name):</span></span>
+<span id="cb22-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#     return "Hello " + name + "!!"</span></span>
+<span id="cb22-27"></span>
+<span id="cb22-28"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># iface = gr.Interface(fn=greet, inputs="text", outputs="text")</span></span>
+<span id="cb22-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># iface.launch()</span></span></code></pre></div>
+</div>
+</section>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<ol type="1">
+<li><a href="https://huggingface.co/spaces/mozartfish/picasso_or_matisse">Picasso or Mattise Gradio + Hugging Face Spaces Application</a></li>
+<li><a href="https://course.fast.ai/Lessons/lesson2.html">FastAI Lesson 2</a></li>
+<li><a href="https://nbviewer.org/github/fastai/fastbook/blob/master/02_production.ipynb">FastAI Chapter 2</a></li>
+<li><a href="https://www.tanishq.ai/blog/posts/2021-11-16-gradio-huggingface.html">Gradio + Hugging Face Spaces: A Tutorial</a></li>
+<li><a href="https://www.youtube.com/watch?v=8X4u9sca3Io">How to Set Up an SSH Key(GitHub, Hugging Face Spaces)</a></li>
+<li><a href="https://huggingface.co/spaces">Hugging Face Spaces</a></li>
+<li><a href="https://www.gradio.app/docs/interface">Gradio docs</a></li>
+<li><a href="https://youtube.com/playlist?list=PLfYUBJiXbdtSLBPJ1GMx-sQWf6iNhb8mM&amp;si=WwPOjgYofy4M9QUW">Jeremy Howard FastAI Live Coding</a></li>
+<li><a href="https://docs.fast.ai/">fastai docs</a></li>
+</ol>
+
+
+</section>
+
+ ]]></description>
+  <category>learning</category>
+  <category>fastai</category>
+  <category>deep learning</category>
+  <guid>https://mozartfish.github.io/blog/posts/fastai-lesson2/fastai-lesson2.html</guid>
+  <pubDate>Thu, 30 Nov 2023 08:00:00 GMT</pubDate>
+</item>
+<item>
   <title>FastAI Lesson 1: Getting Started</title>
   <dc:creator>Pranav Rajan</dc:creator>
   <link>https://mozartfish.github.io/blog/posts/fastai-lesson1/fastai-lesson1.html</link>
@@ -25181,7 +25957,7 @@ font-style: inherit;">0.1</span>)</span></code></pre></div>
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>In this lesson, Jeremy walks through a bird classification example which back in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I found some of the definitions and the code in this lesson challenging which is where Chapter 1 was really helpful. I would strongly recommend checking out the definitions in this chapter because they are still used today when talking about more advanced models like GPT-4.</p>
+<p>In this lesson, Jeremy walks through a bird classification example which back in 2015 was considered the bleeding edge of state of the art. 8 years later, it’s hard to believe that I can run this on my own local machine. Even though my training is in computer science, I found some of the definitions and the code in this lesson challenging. <a href="https://nbviewer.org/github/fastai/fastbook/blob/master/01_intro.ipynb">Chapter 1</a> goes over the terms in depth and was very helpful for understanding the concepts described in <code>lesson 1</code> I would strongly recommend checking out the definitions in this chapter because they are still used today when talking about more advanced models like GPT-4.</p>
 </section>
 <section id="terminology" class="level2">
 <h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
